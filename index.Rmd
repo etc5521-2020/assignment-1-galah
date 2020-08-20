@@ -15,7 +15,7 @@ output:
 
 # Introduction and motivation
 
-Animals are all around us in the sky, in the oceans, in our backyards and in our homes. What happens to animals in trouble, it could be cats, dogs, horses or livestock? Who takes care of them? The answer is Royal Society for the Prevention of cruelty to Animals.  
+Animals are all around us in the sky, in the oceans, in our backyards and in our homes. What happens to animals in trouble, it could be cats, dogs, horses or livestock? Who takes care of them when they are in trouble or are lost? The answer is Royal Society for the Prevention of cruelty to Animals.  
 
 The RSPCA is Australia's oldest, largest and most trusted animal welfare organization, according to its description, there is a gradual increase in the number of animals every year which are received in animal shelters and adoption centres across the country. RSPCA decides to analyse the results of animals in Australia and help them.
 
