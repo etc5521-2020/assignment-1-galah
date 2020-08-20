@@ -15,9 +15,10 @@ output:
 
 # Introduction and motivation
 
-[FILL] Give the bigger picture of the data, and inspire the reader to learn more about the problem by reading your analysis. 
+Animals are all around us in the sky, in the oceans, in our backyards and in our homes. What happens to animals in trouble, it could be cats, dogs, horses or livestock? Who takes care of them? The answer is Royal Society for the Prevention of cruelty to Animals.  
 
-The RSPCA is Australia's oldest, largest and most trusted animal welfare organization, according to its description, there is a gradual increase in the number of animals every year which are received in animal shelters and adoption centers across the country. So our group decides to analyze the results of animals in Australia.
+The RSPCA is Australia's oldest, largest and most trusted animal welfare organization, according to its description, there is a gradual increase in the number of animals every year which are received in animal shelters and adoption centres across the country. RSPCA decides to analyse the results of animals in Australia and help them.
+
 
 # Data description
 
@@ -56,7 +57,16 @@ There are three data tables separately coming from the RSPCA, Townsville Animal 
 *responsible_office*: Responsible office for the complaint
 *city*: City (Brisbane)
 
+# Questions 
 
+Which state has highest rate for the best possible outcome for animals?
+
+Which animal is euthanized the most throughout Australia?
+
+What is the percentage of rehomed animals state wise?
+
+Cats Vs Dogs who are more likely to get adopted or reclaimed?
+ 
 
 
 
