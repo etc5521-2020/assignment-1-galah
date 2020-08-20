@@ -1,10 +1,10 @@
 ---
 title: "ETC5521 Assignment 1"
-subtitle: "Your title"
-team: [FILL]
+subtitle: "Australian Animal Outcomes"
+team: galah
 author:
-  - [FILL]
-  - [FILL]
+  - Sen Wang
+  - Muhammad Soban Qasim
 date: "`r Sys.Date()`"
 output: 
   html_document
@@ -17,7 +17,48 @@ output:
 
 [FILL] Give the bigger picture of the data, and inspire the reader to learn more about the problem by reading your analysis. 
 
+The RSPCA is Australia's oldest, largest and most trusted animal welfare organization, according to its description, there is a gradual increase in the number of animals every year which are received in animal shelters and adoption centers across the country. So our group decides to analyze the results of animals in Australia.
+
 # Data description
+
+There are three data tables separately coming from the RSPCA, Townsville Animal Complaints and Brisbane Open Data - Animal Complaints.
+
+1. animal_outcomes.csv
+
+*year*: Full year
+*animal_type*: Animal type (horse, wildlife, dog, cat, etc)
+*outcome*: 	Animal outcome - euthanized, released, rehomed, etc
+*ACT*: ACT - Australian Capital Territory
+*NSW*: New South Wales
+*NT*: Northern Territory
+*QLD*: Queensland
+*SA*: South Australia
+*TAS*: Tasmania
+*VIC*: Victoria
+*WA*: Western Australian
+*Total*: Australian Total
+
+2. animal_complaints.csv
+
+*Animal Type*: Animal Type
+*Complaint Type*: Complaint type
+*Date Received*: Date received (Month - year)
+*Suburb*: Suburb/region
+*Electoral Division*: Electoral Division
+
+3. brisbane_complaints.csv
+
+*nature*:	Nature of complaints (animal)
+*animal_type*: Animal type
+*category*: Category of complaint
+*suburb*: Suburb where reported
+*date_range*: Date range (typically 1 quarter + year)
+*responsible_office*: Responsible office for the complaint
+*city*: City (Brisbane)
+
+
+
+
 
 # Analysis and findings
 
