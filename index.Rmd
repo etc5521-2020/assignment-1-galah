@@ -59,7 +59,13 @@ There are three data tables separately coming from the RSPCA, Townsville Animal 
 *responsible_office*: Responsible office for the complaint
 *city*: City (Brisbane)
 
-# Questions 
+
+# Analysis and findings
+
+[FILL] Should include at least one plot or numerical summary for each of your questions, that helps the reader arrive at an answer. You should also write paragraphs describing the methods, summaries and findings. 
+
+
+ 
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, include = FALSE, message = FALSE, warning = FALSE)
@@ -86,28 +92,27 @@ library(kableExtra)
 
 ```{r load-data}
 
-tuesdata <- tidytuesdayR::tt_load(2020, week = 30)
+tuesdata <- tidytuesdayR::tt_load(2020, week = 30) #downloading the data set as instructed in the git repo
 
-animal_outcomes <- tuesdata$animal_outcomes
+animal_outcomes <- tuesdata$animal_outcomes  #seperating the data files for easier navigation
 animal_complaints <- tuesdata$animal_complaints
 brisbane_complaints <- tuesdata$brisbane_complaints
+
 ```
+
+# Questions
 
 
 ## Q1: Which state has highest rate for the best possible outcome for animals?
 
-```{r}
-library(sf)
-aus_map <- readRDS("oz_map.rds") 
+```{r loading rds map}
+
+aus_map <- readRDS("oz_map.rds") #loading the rds map file 
 
 ```
 
-```{r}
-animal_outcomes$
-```
+```{r calculating good outcomes}
 
-
-```{r}
 q1 <- animal_outcomes %>% select(-year, 
                    -animal_type) %>% 
   group_by(outcome) %>% 
@@ -119,7 +124,7 @@ q1 <- animal_outcomes %>% select(-year,
                     TAS, 
                     VIC, 
                     WA),  
-               list( sum),na.rm=TRUE) 
+               list( sum),na.rm=TRUE) #suming up the outcomes category wise
 
 
 
@@ -128,23 +133,25 @@ q11 <-  pivot_longer(q1, `ACT`:`WA`,
                      names_to = "State", 
                      values_to = "outcomes") %>% 
   pivot_wider(names_from = outcome, 
-              values_from = outcomes)
+              values_from = outcomes) #wranggling to get better visualizing sense
 
-q11 <- q11 %>%  mutate(good_outcome = (rowSums(q11[,c(-1,-3)]))/rowSums(q11[,c(-1)])*100)
+q11 <- q11 %>%  mutate(good_outcome = (rowSums(q11[,c(-1,-3)]))/rowSums(q11[,c(-1)])*100) #calculating percentage of good outcomes by taking out euthanization and dividing it by the total number of outcomes per state 
 
                                                                                                     q12 <- q11 %>% select(State, 
-                                                                                                                         good_outcome)                                                    
+                                                                                                                         good_outcome)           #selecting variables for ease 
+                                                                                                    
+                                                                                                    
 ```
 
 
-```{r}
+```{r getting the states up}
 aus_map_states <- aus_map %>% 
-  left_join(q12, by = c("state_abb" = "State")) 
+  left_join(q12, by = c("state_abb" = "State")) #joining data sets by states
 
 ```
 
-```{r, message=FALSE, warning=FALSE,fig.width=10, fig.height=8}
-state_plot <- ggplot(aus_map_states, 
+```{r Australian states with good outcome %, fig.height=8, fig.width=10, message=FALSE, warning=FALSE}
+state_plot <- ggplot(aus_map_states,   #mapping our map
                      aes(x = longitude, 
                          y = latitude, 
                          fill = good_outcome)) + 
@@ -153,8 +160,8 @@ state_plot <- ggplot(aus_map_states,
   labs(subtitle="Animals saved by RSPCA", 
        y=" ", 
        x=" ", 
-       title="Animal survival rate", 
-       caption = "Australia Euthanization rate")+ 
+       title="States with rates for the best possible outcome for animals", 
+       caption = "Animal survival rate")+ 
   geom_sf_text(aes(label = state), 
                colour = "white")
   scale_fill_viridis_c( "alpha = 1",
@@ -261,8 +268,6 @@ In Figure  \@ref(fig:p2), from 1999 to 2018 the number of adopted cats has been 
 
 
 
-# Analysis and findings
 
-[FILL] Should include at least one plot or numerical summary for each of your questions, that helps the reader arrive at an answer. You should also write paragraphs describing the methods, summaries and findings. 
 
 # References
