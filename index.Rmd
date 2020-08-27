@@ -60,15 +60,12 @@ There are three data tables separately coming from the RSPCA, Townsville Animal 
 *city*: City (Brisbane)
 
 
-# Analysis and findings
-
-[FILL] Should include at least one plot or numerical summary for each of your questions, that helps the reader arrive at an answer. You should also write paragraphs describing the methods, summaries and findings. 
 
 
  
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, include = FALSE, message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(echo = F, include = FALSE, message = FALSE, warning = FALSE)
 ```
 
 ```{r libraries}
@@ -76,7 +73,6 @@ library(tidytuesdayR)
 library(tidyr)
 library(ggplot2)
 library(dplyr)
-library(ggmap)
 library(rgdal)
 library(maptools)
 library(plyr)
@@ -90,7 +86,7 @@ library(broom)
 library(kableExtra)
 ```
 
-```{r load-data}
+```{r load-data, echo=FALSE}
 
 tuesdata <- tidytuesdayR::tt_load(2020, week = 30) #downloading the data set as instructed in the git repo
 
@@ -99,6 +95,9 @@ animal_complaints <- tuesdata$animal_complaints
 brisbane_complaints <- tuesdata$brisbane_complaints
 
 ```
+
+
+
 
 # Questions
 
@@ -150,8 +149,9 @@ aus_map_states <- aus_map %>%
 
 ```
 
-```{r Australian states with good outcome %, fig.height=8, fig.width=10, message=FALSE, warning=FALSE}
-state_plot <- ggplot(aus_map_states,   #mapping our map
+
+```{r Animal survival rate, fig.height=8, fig.width=10, message=FALSE, warning=FALSE}
+state_plot <- ggplot(aus_map_states, 
                      aes(x = longitude, 
                          y = latitude, 
                          fill = good_outcome)) + 
@@ -160,8 +160,8 @@ state_plot <- ggplot(aus_map_states,   #mapping our map
   labs(subtitle="Animals saved by RSPCA", 
        y=" ", 
        x=" ", 
-       title="States with rates for the best possible outcome for animals", 
-       caption = "Animal survival rate")+ 
+       title="Animal survival rate", 
+       caption = "Australia Euthanization rate")+ 
   geom_sf_text(aes(label = state), 
                colour = "white")
   scale_fill_viridis_c( "alpha = 1",
@@ -181,11 +181,19 @@ state_plot
 
 
 
+
+Figure  \@ref(fig:Animal survival rate), shows the rate of animals that are in the care of RSPCA, find a good outcome, from the year 1999 to 2018, where animals can be either reclaimed, rehomed, released, in stock, transfered or be currently in care. The plot clearly shows Western Australia to have the highest good outcome rate of over 75%, while sadly New South Wales has the lowest good outcome rate of 55%. Otherwise meaning that the rest of the 45% of animals are euthanized.  
+
+
+
+
+
+
 ## Q2: Which animal is euthanized the most throughout Australia?
 
 
 
-```{r}
+```{r getting counts, include=FALSE}
 animal_outcomes  %>% group_by( year,
                  outcome, 
                  animal_type) %>%                         
@@ -219,10 +227,10 @@ q2 <- animal_outcomes %>% filter(outcome == "Euthanized") %>%
                     WA),            
                list(" " = sum)) 
 
-q2$total_animals_euthanised = rowSums(q2[,c(-1)], na.rm=TRUE)
+ q2$total_animals_euthanised = rowSums(q2[,c(-1)], na.rm=TRUE)
 ```
 
-```{r,fig.height=8, fig.width=10}
+```{r Australia Euthanization count, fig.width=10}
 options(scipen=999)
  p2 <- ggplot(q2,
               aes(x =reorder(animal_type, 
@@ -240,6 +248,9 @@ options(scipen=999)
 
 ggplotly(p2)
 ```
+
+Figure  \@ref(fig:Australia Euthanization count), shows us the euthanization count by animal type throughout Australia from the year 1999 to 2018. Cats have the highest recorded euthanization count at 553,956 in Australia under the care of RSPCA. 
+
 
 ## Q3: What is the percentage of rehomed animals state wise?
 
@@ -315,14 +326,17 @@ p1 <- ggplot(d,
 ggplotly(p1)
 ```
 
-In Figure  \@ref(fig:p1), it is clear that the highest proportion of animals were relocated in WA and the lowest proportion in QLD, but the difference between them is so much as only 13 percent.
+In Figure  \@ref(fig:p1), it is clear that the highest proportion of animals were relocated in WA and the lowest proportion in QLD, but the difference between them is so much as only 13 percent. This also corroborates with Figure  \@ref(fig:Animal survival rate) in terms of good outcome. 
 
 
 
 
 
-## Q4: Cats Vs Dogs who are more likely to get adopted or reclaimed?
+## Q4: Cats Vs Dogs who are more likely to get reclaimed?
  
+
+
+
 
 ```{r screening}
 animal_outcomes3 <- animal_outcomes %>%
@@ -345,8 +359,11 @@ p2 <-  ggplot(animal_outcomes3,
 ggplotly(p2)
 ```
 
-In Figure  \@ref(fig:p2), from 1999 to 2018 the number of adopted cats has been stable, while the number of adopted cats has been fluctuated
+In Figure  \@ref(fig:p2), from 1999 to 2018 the number of reclaimed cats has been stable more or less, while the number of reclaimed dogs has flunctuated over the years. 2009 was a good year for dogs.
 
+# Analysis and findings
+
+[FILL] Should include at least one plot or numerical summary for each of your questions, that helps the reader arrive at an answer. You should also write paragraphs describing the methods, summaries and findings. 
 
 
 
