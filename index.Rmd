@@ -6,7 +6,7 @@ author:
   - Sen Wang
   - Muhammad Soban Qasim
 date: "`r Sys.Date()`"
-bibliography: reference.bib
+bibliography: references.bib
 biblio-style: authoryear-comp
 output: 
   bookdown::html_document2
