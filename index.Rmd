@@ -85,7 +85,7 @@ library(kableExtra)
 ```
 
 ```{r load-data}
-tuesdata <- tidytuesdayR::tt_load('2020-07-21')
+
 tuesdata <- tidytuesdayR::tt_load(2020, week = 30)
 
 animal_outcomes <- tuesdata$animal_outcomes
@@ -94,11 +94,89 @@ brisbane_complaints <- tuesdata$brisbane_complaints
 ```
 
 
-Which state has highest rate for the best possible outcome for animals?
+## Q1: Which state has highest rate for the best possible outcome for animals?
 
-Which animal is euthanized the most throughout Australia?
+```{r}
+library(sf)
+aus_map <- readRDS("oz_map.rds") 
 
-What is the percentage of rehomed animals state wise?
+```
+
+```{r}
+animal_outcomes$
+```
+
+
+```{r}
+q1 <- animal_outcomes %>% select(-year, 
+                   -animal_type) %>% 
+  group_by(outcome) %>% 
+  summarise_at(vars(ACT, 
+                    NSW, 
+                    NT, 
+                    QLD, 
+                    SA, 
+                    TAS, 
+                    VIC, 
+                    WA),  
+               list( sum),na.rm=TRUE) 
+
+
+
+
+q11 <-  pivot_longer(q1, `ACT`:`WA`, 
+                     names_to = "State", 
+                     values_to = "outcomes") %>% 
+  pivot_wider(names_from = outcome, 
+              values_from = outcomes)
+
+q11 <- q11 %>%  mutate(good_outcome = (rowSums(q11[,c(-1,-3)]))/rowSums(q11[,c(-1)])*100)
+
+                                                                                                    q12 <- q11 %>% select(State, 
+                                                                                                                         good_outcome)                                                    
+```
+
+
+```{r}
+aus_map_states <- aus_map %>% 
+  left_join(q12, by = c("state_abb" = "State")) 
+
+```
+
+```{r, message=FALSE, warning=FALSE,fig.width=10, fig.height=8}
+state_plot <- ggplot(aus_map_states, 
+                     aes(x = longitude, 
+                         y = latitude, 
+                         fill = good_outcome)) + 
+  geom_sf() + aes(x = longitude, 
+                  y = latitude) +   
+  labs(subtitle="Animals saved by RSPCA", 
+       y=" ", 
+       x=" ", 
+       title="Animal survival rate", 
+       caption = "Australia Euthanization rate")+ 
+  geom_sf_text(aes(label = state), 
+               colour = "white")
+  scale_fill_viridis_c( "alpha = 1",
+  "begin = 0",
+  "end = 100",
+  "direction = 1",
+  option = "D",
+  values = NULL,
+  space = "Lab",
+  na.value = "black",
+  guide = "colourbar",
+  aesthetics = "fill"
+) 
+  
+state_plot
+```
+
+
+
+## Q2: Which animal is euthanized the most throughout Australia?
+
+## Q3: What is the percentage of rehomed animals state wise?
 
 ```{r Rehomed}
 animal_outcomes2 <- animal_outcomes %>%
@@ -155,7 +233,7 @@ In Figure  \@ref(fig:p1), it is clear that the highest proportion of animals wer
 
 
 
-Cats Vs Dogs who are more likely to get adopted or reclaimed?
+## Q4: Cats Vs Dogs who are more likely to get adopted or reclaimed?
  
 
 ```{r screening}
