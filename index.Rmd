@@ -183,6 +183,64 @@ state_plot
 
 ## Q2: Which animal is euthanized the most throughout Australia?
 
+
+
+```{r}
+animal_outcomes  %>% group_by( year,
+                 outcome, 
+                 animal_type) %>%                         
+  summarise_at(vars(ACT, 
+                    NSW, 
+                    NT, 
+                    QLD, 
+                    SA, 
+                    TAS, 
+                    VIC),  
+               list( sum)) 
+
+q2 <- animal_outcomes %>% filter(outcome == "Euthanized") %>% 
+  select(animal_type, 
+         ACT, 
+         NSW, 
+         NT, 
+         QLD, 
+         SA, 
+         TAS, 
+         VIC, 
+         WA) %>%  
+  group_by(animal_type) %>%                         
+  summarise_at(vars(ACT, 
+                    NSW, 
+                    NT, 
+                    QLD, 
+                    SA, 
+                    TAS, 
+                    VIC, 
+                    WA),            
+               list(" " = sum)) 
+
+q2$total_animals_euthanised = rowSums(q2[,c(-1)], na.rm=TRUE)
+```
+
+```{r,fig.height=8, fig.width=10}
+options(scipen=999)
+ p2 <- ggplot(q2,
+              aes(x =reorder(animal_type, 
+                             -total_animals_euthanised), 
+                  y =  total_animals_euthanised)) + 
+   geom_bar(stat="identity", 
+            fill="tomato3") +   
+   labs(subtitle="Which animal is the most euthanized", 
+       y="Count", 
+       x="Animals", 
+       title="Australia Euthanization count", 
+       caption = "Australia Euthanization rate") + 
+  theme(axis.text.x = element_text(angle=45, vjust=0.9)) + 
+   ylim(c(0, 600000)) 
+
+ggplotly(p2)
+```
+
 ## Q3: What is the percentage of rehomed animals state wise?
 
 ```{r Rehomed}
@@ -213,16 +271,39 @@ WA_Ttl <- sum(animal_outcomes$WA)
 
 ```{r New_dataset}
 d <- data.frame(
-  State = c("ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"),
-  Rehomed_Ttl = c(ACT_Rehomed_Ttl, NSW_Rehomed_Ttl, NT_Rehomed_Ttl, QLD_Rehomed_Ttl, SA_Rehomed_Ttl, TAS_Rehomed_Ttl, VIC_Rehomed_Ttl, WA_Rehomed_Ttl),
-  Total = c(ACT_Ttl, NSW_Ttl, NT_Ttl, QLD_Ttl, SA_Ttl, TAS_Ttl, VIC_Ttl, WA_Ttl)
+  State = c("ACT", 
+            "NSW", 
+            "NT", 
+            "QLD", 
+            "SA", 
+            "TAS", 
+            "VIC", 
+            "WA"),
+  Rehomed_Ttl = c(ACT_Rehomed_Ttl, 
+                  NSW_Rehomed_Ttl, 
+                  NT_Rehomed_Ttl, 
+                  QLD_Rehomed_Ttl, 
+                  SA_Rehomed_Ttl, 
+                  TAS_Rehomed_Ttl, 
+                  VIC_Rehomed_Ttl, 
+                  WA_Rehomed_Ttl),
+  Total = c(ACT_Ttl, 
+            NSW_Ttl, 
+            NT_Ttl, 
+            QLD_Ttl, 
+            SA_Ttl, 
+            TAS_Ttl, 
+            VIC_Ttl, 
+            WA_Ttl)
 )  %>%
   mutate(Percent = round(Rehomed_Ttl/Total*100))
 ```
 
 
 ```{r p1, fig.width = 8, fig.height = 8, fig.cap="The percentage of rehomed animals state wise", fig.align= "center"}
-p1 <- ggplot(d, aes(x=reorder(State,Percent), y=Percent)) +
+p1 <- ggplot(d, 
+             aes(x=reorder(State,Percent), 
+                 y=Percent)) +
   geom_histogram(stat="identity", 
                  fill = "lightblue", 
                  position = "dodge",
