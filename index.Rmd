@@ -59,14 +59,112 @@ There are three data tables separately coming from the RSPCA, Townsville Animal 
 
 # Questions 
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, include = FALSE, message = FALSE, warning = FALSE)
+```
+
+```{r libraries}
+library(tidyverse)
+library(ggplot2)
+library(plotly)
+```
+
+```{r load-data}
+tuesdata <- tidytuesdayR::tt_load('2020-07-21')
+tuesdata <- tidytuesdayR::tt_load(2020, week = 30)
+
+animal_outcomes <- tuesdata$animal_outcomes
+animal_complaints <- tuesdata$animal_complaints
+brisbane_complaints <- tuesdata$brisbane_complaints
+```
+
+
 Which state has highest rate for the best possible outcome for animals?
 
 Which animal is euthanized the most throughout Australia?
 
 What is the percentage of rehomed animals state wise?
 
+```{r Rehomed}
+animal_outcomes2 <- animal_outcomes %>%
+  filter(outcome == "Rehomed")
+
+
+ACT_Rehomed_Ttl <- sum(animal_outcomes2$ACT)
+NSW_Rehomed_Ttl <- sum(animal_outcomes2$NSW)
+NT_Rehomed_Ttl <- sum(animal_outcomes2$NT, na.rm = TRUE)
+QLD_Rehomed_Ttl <- sum(animal_outcomes2$QLD)
+SA_Rehomed_Ttl <- sum(animal_outcomes2$SA)
+TAS_Rehomed_Ttl <- sum(animal_outcomes2$TAS)
+VIC_Rehomed_Ttl <- sum(animal_outcomes2$VIC)
+WA_Rehomed_Ttl <- sum(animal_outcomes2$WA)
+```
+
+```{r Total}
+ACT_Ttl <- sum(animal_outcomes$ACT)
+NSW_Ttl <- sum(animal_outcomes$NSW)
+NT_Ttl <- sum(animal_outcomes$NT, na.rm = TRUE)
+QLD_Ttl <- sum(animal_outcomes$QLD)
+SA_Ttl <- sum(animal_outcomes$SA, na.rm = TRUE)
+TAS_Ttl <- sum(animal_outcomes$TAS, na.rm = TRUE)
+VIC_Ttl <- sum(animal_outcomes$VIC)
+WA_Ttl <- sum(animal_outcomes$WA)
+```
+
+```{r New_dataset}
+d <- data.frame(
+  State = c("ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"),
+  Rehomed_Ttl = c(ACT_Rehomed_Ttl, NSW_Rehomed_Ttl, NT_Rehomed_Ttl, QLD_Rehomed_Ttl, SA_Rehomed_Ttl, TAS_Rehomed_Ttl, VIC_Rehomed_Ttl, WA_Rehomed_Ttl),
+  Total = c(ACT_Ttl, NSW_Ttl, NT_Ttl, QLD_Ttl, SA_Ttl, TAS_Ttl, VIC_Ttl, WA_Ttl)
+)  %>%
+  mutate(Percent = round(Rehomed_Ttl/Total*100))
+```
+
+
+```{r p1, fig.width = 8, fig.height = 8, fig.cap="The percentage of rehomed animals state wise", fig.align= "center"}
+p1 <- ggplot(d, aes(x=reorder(State,Percent), y=Percent)) +
+  geom_histogram(stat="identity", 
+                 fill = "lightblue", 
+                 position = "dodge",
+                 width= 0.8) +
+  xlab("State") +
+  ylab("Percentage") +
+  ggtitle("The percentage of rehomed animals state wise")
+
+ggplotly(p1)
+```
+
+In Figure  \@ref(fig:p1), it is clear that the highest proportion of animals were relocated in WA and the lowest proportion in QLD, but the difference between them is so much as only 13 percent.
+
+
+
+
+
 Cats Vs Dogs who are more likely to get adopted or reclaimed?
  
+
+```{r screening}
+animal_outcomes3 <- animal_outcomes %>%
+  filter(outcome == "Reclaimed") %>%
+  filter(animal_type == c("Dogs", "Cats"))
+```
+
+```{r p2, fig.width = 8, fig.height = 8, fig.cap="The more likely to get reclaimed", fig.align= "center"}
+p2 <-  ggplot(animal_outcomes3, 
+              aes( x = year,
+              y = Total, 
+              group = as.factor(animal_type),
+              shape = as.factor(animal_type),
+              colour = as.factor(animal_type))) +
+  geom_line() +
+  geom_point() +
+  ggtitle("The more likely to get reclaimed") +
+  theme(legend.title=element_blank())
+
+ggplotly(p2)
+```
+
+In Figure  \@ref(fig:p2), from 1999 to 2018 the number of adopted cats has been stable, while the number of adopted cats has been fluctuated
 
 
 
