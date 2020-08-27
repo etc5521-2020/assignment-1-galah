@@ -361,6 +361,28 @@ ggplotly(p2)
 
 In Figure  \@ref(fig:p2), from 1999 to 2018 the number of reclaimed cats has been stable more or less, while the number of reclaimed dogs has flunctuated over the years. 2009 was a good year for dogs.
 
+### While we are at the subject of Cats Vs Dogs 
+
+```{r complaints}
+x1 <- animal_complaints %>% 
+  select(`Animal Type`) %>% 
+  count() 
+
+```
+
+```{r Complaints against who Cats or Dogs}
+p4e <- x1 %>% ggplot(aes(x = Animal.Type, 
+                 y = freq)) + 
+  geom_bar(stat="identity", 
+           fill="yellow") + 
+  ylab("complaint_count") + xlab("cat/Vs/dog")
+
+ggplotly(p4e)
+```
+
+Figure  \@ref(fig:Complaints against who Cats or Dogs), shows that dog complaints made by people are dispropotionatly more higher then poeple who have filed a complaint against cats. 
+
+
 # Analysis and findings
 
 [FILL] Should include at least one plot or numerical summary for each of your questions, that helps the reader arrive at an answer. You should also write paragraphs describing the methods, summaries and findings. 
