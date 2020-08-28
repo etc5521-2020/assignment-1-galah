@@ -17,15 +17,15 @@ output:
 
 # Introduction and motivation
 
-Animals are all around us in the sky, in the oceans, in our backyards and in our homes. What happens to animals in trouble, it could be cats, dogs, horses or livestock? Who takes care of them when they are in trouble or are lost? The answer is Royal Society for the Prevention of cruelty to Animals.You can find more about RSPCA or Royal Society for the Prevention of Cruelty to Animals @About_Us.  
+Animals are all around us in the sky, in the oceans, in our backyards, and our homes. What happens to these animals in trouble, it could be cats, dogs, horses, or livestock? Who takes care of them when they are in trouble or are lost? The answer is the Royal Society for the Prevention of Cruelty to Animals. You can find more about RSPCA or the Royal Society for the Prevention of Cruelty to Animals  @About_Us.  
 
-The RSPCA is Australia's oldest, largest and most trusted animal welfare organization, according to its description, there is a gradual increase in the number of animals every year which are received in animal shelters and adoption centres across the country. RSPCA decides to analyse the results of animals in Australia and help them.
+The RSPCA is Australia’s oldest, largest and most trusted animal welfare organization, according to its description, there is a gradual increase in the number of animals every year which are received in animal shelters and adoption centers across the country. RSPCA decides to analyze the results of animals in Australia and help them.
 
-While looking online and researching on RSPCA we came across many articles that were indirectly blaming RSPCA for their high euthanize rates and some individuals who saw the worst side of RSPCA. That got us interested in the outcomes from RSPCA and as RSPCA operates state wise. After a while it raised a question which animal is euthanized most. @powell_2020
+While looking online and researching RSPCA we came across many articles that were indirectly blaming RSPCA for their high euthanize rates and some individuals who saw the worst side of RSPCA. That got us interested in the outcomes from RSPCA and as RSPCA operates state wise. After a while, it raised a question about which animal is euthanized most. @powell_2020
 
-We also came across multiple articles and web pages dedicated to adoption of animals that have been in the care of RSPCA. We wanted to know which state rehomes the most animals. If you are interested please clink this @Adopt_A_Pet
+We also came across multiple articles and web pages dedicated to the adoption of animals that have been in the care of RSPCA. We wanted to know which state rehomes the most animals. If you are interested please click this @Adopt_A_Pet
 
-Finally, cat person or dog person a comparison between the 2 types of people out there, which lost pet is most likely to get reclaimed.
+Finally, cat person or dog person a comparison between the two types of people out there, which lost pet is most likely to get reclaimed.
 
 
 
@@ -33,7 +33,7 @@ Finally, cat person or dog person a comparison between the 2 types of people out
 
 # Data description
 
-There are three data tables separately coming from the RSPCA, Townsville Animal Complaints and Brisbane Open Data - Animal Complaints.
+There are three data tables separately coming from the RSPCA, Townsville Animal Complaints, and Brisbane Open Data - Animal Complaints.
 
 __1. animal_outcomes.csv__
 
@@ -91,11 +91,11 @@ __3. brisbane_complaints.csv__
 
 ## Limitations
 
-The animal_outcomes data set has not specified that suburbs, which limits our approach to identify which suburb has the most common complaint type. Which can also help to identify which suburb has the most animal type too by looking into the animal type the complaint was made against. Similarly, the electoral divisions are of no significance in relation to the data frame they are not specified and are not easy to distinguish. 
+The animal_outcomes data set has not specified that suburbs, which limit our approach to identifying which suburb has the most common complaint type. This can also help to identify which suburb has the most animal type too by looking into the animal type the complaint was made against. Similarly, the electoral divisions are of no significance with the data frame they are not specified and are not easy to distinguish. 
 
 In the animal_complaints data set the question that comes up is of adoption which the outcome variable talks about reclaimed and rehomed, but it does not tell us if the animals were reclaimed or rehomed in the same state.   
 
-In the brisbane_complaints data set the date range is difficult to apprehend, because of fluctuating ranges and inconsistencies. 
+In the brisbane_complaints data set the date range is difficult to apprehend, because of fluctuating ranges and inconsistencies.
 
 
  
@@ -222,7 +222,7 @@ state_plot
 ```
 
 
-Figure  \@ref(fig:Animalsurvivalrate), shows the rate of animals that are in the care of RSPCA, find a good outcome, from the year 1999 to 2018, where animals can be either reclaimed, rehomed, released, in stock, transferred or be currently in care. The plot clearly shows Western Australia to have the highest good outcome rate of over 75%, while sadly New South Wales has the lowest good outcome rate of 55%. Otherwise meaning that the rest of the 45% of animals are euthanized.  
+Figure  \@ref(fig:Animalsurvivalrate), shows the rate of animals that are in the care of RSPCA, find a good outcome, from the year 1999 to 2018, where animals can be either reclaimed, rehomed, released, in stock, transferred, or be currently in care. The plot clearly shows Western Australia to have the highest good outcome rate of over 75%, while sadly New South Wales has the lowest good outcome rate of 55%. Otherwise meaning that the rest of the 45% of animals are euthanized.  
 
 
 
@@ -311,7 +311,16 @@ VIC_Rehomed_Ttl <- sum(animal_outcomes2$VIC)
 WA_Rehomed_Ttl <- sum(animal_outcomes2$WA)
 ```
 
-
+```{r Total}
+ACT_Ttl <- sum(animal_outcomes$ACT)
+NSW_Ttl <- sum(animal_outcomes$NSW)
+NT_Ttl <- sum(animal_outcomes$NT, na.rm = TRUE)
+QLD_Ttl <- sum(animal_outcomes$QLD)
+SA_Ttl <- sum(animal_outcomes$SA, na.rm = TRUE)
+TAS_Ttl <- sum(animal_outcomes$TAS, na.rm = TRUE)
+VIC_Ttl <- sum(animal_outcomes$VIC)
+WA_Ttl <- sum(animal_outcomes$WA)
+```
 
 ```{r New_dataset}
 d <- data.frame(
@@ -344,7 +353,7 @@ d <- data.frame(
 ```
 
 
-```{r plot3, fig.width = 8, fig.height = 8, fig.cap="The percentage of rehomed animals state wise", fig.align= "center"}
+```{r plot3, fig.width = 8, fig.height = 6, fig.cap="The percentage of rehomed animals state wise", fig.align= "center"}
 p3 <- ggplot(d, 
              aes(x=reorder(State,Percent),  #plotting the data
                  y=Percent)) +
@@ -359,14 +368,14 @@ p3 <- ggplot(d,
 ggplotly(p3)
 ```
 
-In Figure  \@ref(fig:plot3), it is clear that the highest proportion of animals were relocated in WA and the lowest proportion in QLD, but the difference between them is so much as only 13 percent. This also corroborates with Figure  \@ref(fig:Animal survival rate) in terms of good outcome. 
+In Figure  \@ref(fig:plot3), it is clear that the highest proportion of animals were relocated in WA and the lowest proportion in QLD, but the difference between them is so much as only 13 percent. This also corroborates with Figure  \@ref(fig:Animalsurvivalrate) in terms of good outcome. 
 
 
 
 
 
 
-## Q4: Cats Vs Dogs who are more likely to get reclaimed?
+## Q4: Cats versus dogs who are more likely to get reclaimed?
  
 
 
@@ -378,7 +387,7 @@ animal_outcomes3 <- animal_outcomes %>%
   filter(animal_type == c("Dogs", "Cats")) #filtering required animal types
 ```
 
-```{r plot4, fig.width = 8, fig.height = 8, fig.cap="The more likely to get reclaimed", fig.align= "center"}
+```{r plot4, fig.width = 8, fig.height = 8, fig.cap="Reclaimed animals: Timeline", fig.align= "center"}
 p4 <-  ggplot(animal_outcomes3, 
               aes( x = year,
               y = Total, 
@@ -387,7 +396,7 @@ p4 <-  ggplot(animal_outcomes3,
               colour = as.factor(animal_type))) +
   geom_line() +
   geom_point() +
-  ggtitle("The more likely to get reclaimed") +
+  ggtitle("Reclaimed animals: Timeline") +
   theme(legend.title=element_blank())
 
 ggplotly(p4)
@@ -395,7 +404,7 @@ ggplotly(p4)
 
 In Figure  \@ref(fig:plot4), from 1999 to 2018 the number of reclaimed cats has been stable, while the number of reclaimed dogs has fluctuated over the years. 2009 was a good year for dogs.
 
-### While we are at the subject of Cats Vs Dogs, who gets the most complaints? 
+### While we are at the subject of cats versus dogs, who gets the most complaints? 
 
 ```{r complaints}
 x1 <- animal_complaints %>% 
@@ -405,7 +414,7 @@ x1 <- animal_complaints %>%
 ```
 
 
-```{r ComplaintsagainstwhoCatsorDogs, fig.cap="Complaints against who Cats or Dogs"}
+```{r ComplaintsagainstwhoCatsorDogs, fig.cap="Complaints against who: Cats or Dogs"}
 p4e <- x1 %>% ggplot(aes(x = Animal.Type, 
                  y = freq)) + 
   geom_bar(stat="identity", 
@@ -416,7 +425,7 @@ ggplotly(p4e)
 ```
 
 
-Figure  \@ref(fig:ComplaintsagainstwhoCatsorDogs), shows that dog complaints made by people are disproportionately higher than people who have filed a complaint against cats.
+Figure  \@ref(fig:ComplaintsagainstwhoCatsorDogs),  shows that dog complaints made by people are disproportionately higher than complaints against cats.
 
 ### What are the most frequent complaints in Brisbane?
 
@@ -454,15 +463,16 @@ brisbane_complaints_category <- na.omit(brisbane_complaints_category)
 p9 +  ggtitle("Complaints made in Brisbane")
 ```
 
-Figure  \@ref(fig:treemap), shows us that in Brisbane the highest complaint rate is Fencing issues, followed by wandering animals, attack on animals and attack on a person. 
+Figure  \@ref(fig:treemap), shows us that in Brisbane the highest complaint rate is Fencing issues, followed by wandering animals, attack on animals, and attack on a person. 
 
 
-
+# Analysis and findings
+[FILL] Should include at least one plot or numerical summary for each of your questions, that helps the reader arrive at an answer. You should also write paragraphs describing the methods, summaries and findings.
 
 
 # Conclusion
 
-In conclusion RSPCA does what is best for the animals, there may be other factors involved such as state laws, size of the state, wild life concentration, population in the state, that needs to be taken under consideration when looking at things such as good outcome rates, euthanization counts, rehomed animals etc. 
+In conclusion, RSPCA does what is best for the animals, there may be other factors involved such as state laws, size of the state, wildlife concentration, population in the state, that needs to be taken under consideration when looking at things such as good outcome rates, euthanization counts, rehomed animals, etc. 
 
 
 The R packages we used in this report: 
