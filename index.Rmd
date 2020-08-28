@@ -17,13 +17,13 @@ output:
 
 # Introduction and motivation
 
-Animals are all around us in the sky, in the oceans, in our backyards, and our homes. What happens to these animals in trouble, it could be cats, dogs, horses, or livestock? Who takes care of them when they are in trouble or are lost? The answer is the Royal Society for the Prevention of Cruelty to Animals. You can find more about RSPCA or the Royal Society for the Prevention of Cruelty to Animals  @About_Us.  
+Animals are all around us in the sky, in the oceans, in our backyards, and our homes. What happens to these animals in trouble, it could be cats, dogs, horses, or livestock? Who takes care of them when they are in trouble or are lost? The answer is the Royal Society for the Prevention of Cruelty to Animals. You can find more about RSPCA or the Royal Society for the Prevention of Cruelty to Animals [here](https://www.rspca.org.au/). @About_Us.  
 
 The RSPCA is Australia’s oldest, largest and most trusted animal welfare organization, according to its description, there is a gradual increase in the number of animals every year which are received in animal shelters and adoption centers across the country. RSPCA decides to analyze the results of animals in Australia and help them.
 
-While looking online and researching RSPCA we came across many articles that were indirectly blaming RSPCA for their high euthanize rates and some individuals who saw the worst side of RSPCA. That got us interested in the outcomes from RSPCA and as RSPCA operates state wise. After a while, it raised a question about which animal is euthanized most. @powell_2020
+While looking online and researching RSPCA we came across many articles that were indirectly blaming RSPCA for their high euthanize rates and some individuals who saw the worst side of RSPCA. That got us interested in the outcomes from RSPCA and as RSPCA operates state wise. After a while, it raised a question about which animal is euthanized most. One of the recent events that motivated us looking into the euthanization rates, you can read about it by clicking [here](https://mobile.abc.net.au/news/2020-02-26/rscpa-qld-issues-apology-after-accidentally-euthanasing-kitten/12001668).  @powell_2020
 
-We also came across multiple articles and web pages dedicated to the adoption of animals that have been in the care of RSPCA. We wanted to know which state rehomes the most animals. If you are interested please click this @Adopt_A_Pet
+We also came across multiple articles and web pages dedicated to the adoption of animals that have been in the care of RSPCA. We wanted to know which state rehomes the most animals. If you are interested please click this [link](https://www.rspca.org.au/adopt-pet). @Adopt_A_Pet
 
 Finally, cat person or dog person a comparison between the two types of people out there, which lost pet is most likely to get reclaimed.
 
@@ -472,8 +472,7 @@ p9 +  ggtitle("Complaints made in Brisbane")
 Figure  \@ref(fig:treemap), shows us that in Brisbane the highest complaint rate is Fencing issues, followed by wandering animals, attack on animals, and attack on a person. 
 
 
-# Analysis and findings
-[FILL] Should include at least one plot or numerical summary for each of your questions, that helps the reader arrive at an answer. You should also write paragraphs describing the methods, summaries and findings.
+
 
 
 # Conclusion
