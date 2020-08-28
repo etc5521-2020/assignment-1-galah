@@ -76,8 +76,8 @@ There are three data tables separately coming from the RSPCA, Townsville Animal 
 
  
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = F, include = FALSE, message = FALSE, warning = FALSE)
+```{r setup, include=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = F, message = FALSE, warning = FALSE)
 ```
 
 ```{r libraries}
@@ -98,7 +98,7 @@ library(broom)
 library(kableExtra)
 ```
 
-```{r load-data, echo=FALSE}
+```{r load-data, echo=FALSE, message=FALSE}
 
 tuesdata <- tidytuesdayR::tt_load(2020, week = 30) #downloading the data set as instructed in the git repo
 
@@ -162,7 +162,7 @@ aus_map_states <- aus_map %>%
 ```
 
 
-```{r Animal survival rate, fig.height=8, fig.width=10, message=FALSE, warning=FALSE}
+```{r Animalsurvivalrate, fig.height=8, fig.width=10,fig.cap="Australia Euthanization rate", message=FALSE, warning=FALSE}
 state_plot <- ggplot(aus_map_states, 
                      aes(x = longitude, 
                          y = latitude, 
@@ -194,7 +194,7 @@ state_plot
 
 
 
-Figure  \@ref(fig:Animal survival rate), shows the rate of animals that are in the care of RSPCA, find a good outcome, from the year 1999 to 2018, where animals can be either reclaimed, rehomed, released, in stock, transferred or be currently in care. The plot clearly shows Western Australia to have the highest good outcome rate of over 75%, while sadly New South Wales has the lowest good outcome rate of 55%. Otherwise meaning that the rest of the 45% of animals are euthanized.  
+Figure  \@ref(fig:Animalsurvivalrate), shows the rate of animals that are in the care of RSPCA, find a good outcome, from the year 1999 to 2018, where animals can be either reclaimed, rehomed, released, in stock, transferred or be currently in care. The plot clearly shows Western Australia to have the highest good outcome rate of over 75%, while sadly New South Wales has the lowest good outcome rate of 55%. Otherwise meaning that the rest of the 45% of animals are euthanized.  
 
 
 
