@@ -435,14 +435,26 @@ Figure  \@ref(fig:treemap), shows us that in Brisbane the highest complaint rate
 
 
 
-# Analysis and findings
+# Conclusion
 
-[FILL] Should include at least one plot or numerical summary for each of your questions, that helps the reader arrive at an answer. You should also write paragraphs describing the methods, summaries and findings. 
 
-###methods 
-### summary
-### findings
-
+The R packages we used in this report: 
+@tidytuesdayR
+@tidyr,  
+@ggplot2, 
+@dplyr,
+@rgdal,
+@maptools,
+@plyr,
+@rgeos,
+@plotly, 
+@mapproj, 
+@leaflet, 
+@tmaptools, 
+@sf,
+@broom,
+@kableExtra,
+@treemapify
 
 
 # References
