@@ -27,13 +27,7 @@ We also came across multiple articles and web pages dedicated to adoption of ani
 
 Finally, cat person or dog person a comparison between the 2 types of people out there, which lost pet is most likely to get reclaimed.
 
-## Limitations
 
-The animal_outcomes data set has not specified that suburbs, which limits our approach to identify which suburb has the most common complaint type. Which can also help to identify which suburb has the most animal type too by looking into the animal type the complaint was made against. Similarly, the electoral divisions are of no significance in relation to the data frame they are not specified and are not easy to distinguish. 
-
-In the animal_complaints data set the question that comes up is of adoption which the outcome variable talks about reclaimed and rehomed, but it does not tell us if the animals were reclaimed or rehomed in the same state.   
-
-In the brisbane_complaints data set the date range is difficult to apprehend, because of fluctuating ranges and inconsistencies. 
 
 
 
@@ -95,7 +89,13 @@ __3. brisbane_complaints.csv__
 
 *city*: City (Brisbane)
 
+## Limitations
 
+The animal_outcomes data set has not specified that suburbs, which limits our approach to identify which suburb has the most common complaint type. Which can also help to identify which suburb has the most animal type too by looking into the animal type the complaint was made against. Similarly, the electoral divisions are of no significance in relation to the data frame they are not specified and are not easy to distinguish. 
+
+In the animal_complaints data set the question that comes up is of adoption which the outcome variable talks about reclaimed and rehomed, but it does not tell us if the animals were reclaimed or rehomed in the same state.   
+
+In the brisbane_complaints data set the date range is difficult to apprehend, because of fluctuating ranges and inconsistencies. 
 
 
  
@@ -122,7 +122,7 @@ library(kableExtra)
 library(treemapify)
 ```
 
-```{r load-data, echo=FALSE, message=FALSE, cache=TRUE, include=FAlse}
+```{r load-data, echo=FALSE, message=FALSE, cache=TRUE, include=FALSE}
 
 tuesdata <- tidytuesdayR::tt_load(2020, week = 30) #downloading the data set as instructed in the git repo
 ```
@@ -187,18 +187,18 @@ aus_map_states <- aus_map %>%
 
 
 
-```{r Animalsurvivalrate, fig.height=8, fig.width=10,fig.cap="Australia Rescue rate", message=FALSE, warning=FALSE}
+```{r survivalrate, fig.height=8, fig.width=10,fig.cap="Australia Rescue rate", message=FALSE, warning=FALSE, include=FALSE}
 state_plot <- ggplot(aus_map_states, 
                      aes(x = longitude, 
                          y = latitude, 
-                         fill = good_outcome)) + 
+                         fill = good_outcome)) + #plotting the data on the map
   geom_sf() + aes(x = longitude, 
                   y = latitude) +   
   labs(subtitle="Animals saved by RSPCA", 
        y=" ", 
        x=" ", 
        title="Animal survival rate", 
-       caption = "Australia Rescue rate")+ 
+       caption = "Australia Rescue rate")+ #getting the captions and titles
   geom_sf_text(aes(label = state), 
                colour = "white")
   scale_fill_viridis_c( "alpha = 1",
@@ -206,17 +206,20 @@ state_plot <- ggplot(aus_map_states,
   "end = 100",
   "direction = 1",
   option = "D",
-  values = NULL,
+  values = NULL,  
   space = "Lab",
   na.value = "black",
   guide = "colourbar",
   aesthetics = "fill"
 ) 
   
-state_plot
+
 ```
 
 
+```{r Animalsurvivalrate, fig.height=8, fig.width=10,fig.cap="Australia Rescue rate"}
+state_plot
+```
 
 
 Figure  \@ref(fig:Animalsurvivalrate), shows the rate of animals that are in the care of RSPCA, find a good outcome, from the year 1999 to 2018, where animals can be either reclaimed, rehomed, released, in stock, transferred or be currently in care. The plot clearly shows Western Australia to have the highest good outcome rate of over 75%, while sadly New South Wales has the lowest good outcome rate of 55%. Otherwise meaning that the rest of the 45% of animals are euthanized.  
@@ -255,7 +258,7 @@ q2 <- animal_outcomes %>% filter(outcome == "Euthanized") %>%
          VIC, 
          WA) %>%  
   group_by(animal_type) %>%                         
-  summarise_at(vars(ACT, 
+  summarise_at(vars(ACT,          #getting sums with respect to state
                     NSW, 
                     NT, 
                     QLD, 
@@ -265,7 +268,7 @@ q2 <- animal_outcomes %>% filter(outcome == "Euthanized") %>%
                     WA),            
                list(" " = sum)) 
 
- q2$total_animals_euthanised = rowSums(q2[,c(-1)], na.rm=TRUE)
+ q2$total_animals_euthanised = rowSums(q2[,c(-1)], na.rm=TRUE) #getting the sum of total animals euthanized
 ```
 
 
@@ -273,14 +276,14 @@ q2 <- animal_outcomes %>% filter(outcome == "Euthanized") %>%
 options(scipen=999)
  p2 <- ggplot(q2,
               aes(x =reorder(animal_type, 
-                             -total_animals_euthanised), 
+                             -total_animals_euthanised), #arranging the plot
                   y =  total_animals_euthanised)) + 
    geom_bar(stat="identity", 
-            fill="tomato3") +   
+            fill="tomato3") +                          #adding color
    labs(subtitle="Which animal is the most euthanized", 
        y="Count", 
        x="Animals", 
-       title="Australia Euthanization count", 
+       title="Australia Euthanization count",                   #giving title
        caption = "Australia Euthanization rate") + 
   theme(axis.text.x = element_text(angle=45, vjust=0.9)) + 
    ylim(c(0, 600000)) 
@@ -298,7 +301,7 @@ animal_outcomes2 <- animal_outcomes %>%
   filter(outcome == "Rehomed")
 
 
-ACT_Rehomed_Ttl <- sum(animal_outcomes2$ACT)
+ACT_Rehomed_Ttl <- sum(animal_outcomes2$ACT)     #getting sum of total rehomed animal by state
 NSW_Rehomed_Ttl <- sum(animal_outcomes2$NSW)
 NT_Rehomed_Ttl <- sum(animal_outcomes2$NT, na.rm = TRUE)
 QLD_Rehomed_Ttl <- sum(animal_outcomes2$QLD)
@@ -308,20 +311,11 @@ VIC_Rehomed_Ttl <- sum(animal_outcomes2$VIC)
 WA_Rehomed_Ttl <- sum(animal_outcomes2$WA)
 ```
 
-```{r Total}
-ACT_Ttl <- sum(animal_outcomes$ACT)
-NSW_Ttl <- sum(animal_outcomes$NSW)
-NT_Ttl <- sum(animal_outcomes$NT, na.rm = TRUE)
-QLD_Ttl <- sum(animal_outcomes$QLD)
-SA_Ttl <- sum(animal_outcomes$SA, na.rm = TRUE)
-TAS_Ttl <- sum(animal_outcomes$TAS, na.rm = TRUE)
-VIC_Ttl <- sum(animal_outcomes$VIC)
-WA_Ttl <- sum(animal_outcomes$WA)
-```
+
 
 ```{r New_dataset}
 d <- data.frame(
-  State = c("ACT", 
+  State = c("ACT",    #making a data frame
             "NSW", 
             "NT", 
             "QLD", 
@@ -346,13 +340,13 @@ d <- data.frame(
             VIC_Ttl, 
             WA_Ttl)
 )  %>%
-  mutate(Percent = round(Rehomed_Ttl/Total*100))
+  mutate(Percent = round(Rehomed_Ttl/Total*100)) #calculating percenatge of rehomed animals
 ```
 
 
 ```{r plot3, fig.width = 8, fig.height = 8, fig.cap="The percentage of rehomed animals state wise", fig.align= "center"}
 p3 <- ggplot(d, 
-             aes(x=reorder(State,Percent), 
+             aes(x=reorder(State,Percent),  #plotting the data
                  y=Percent)) +
   geom_histogram(stat="identity", 
                  fill = "lightblue", 
@@ -381,7 +375,7 @@ In Figure  \@ref(fig:plot3), it is clear that the highest proportion of animals 
 ```{r screening}
 animal_outcomes3 <- animal_outcomes %>%
   filter(outcome == "Reclaimed") %>%
-  filter(animal_type == c("Dogs", "Cats"))
+  filter(animal_type == c("Dogs", "Cats")) #filtering required animal types
 ```
 
 ```{r plot4, fig.width = 8, fig.height = 8, fig.cap="The more likely to get reclaimed", fig.align= "center"}
@@ -405,7 +399,7 @@ In Figure  \@ref(fig:plot4), from 1999 to 2018 the number of reclaimed cats has 
 
 ```{r complaints}
 x1 <- animal_complaints %>% 
-  select(`Animal Type`) %>% 
+  select(`Animal Type`) %>%  #selecting animal type to get total count oer animal type 
   count() 
 
 ```
@@ -424,11 +418,15 @@ ggplotly(p4e)
 
 Figure  \@ref(fig:ComplaintsagainstwhoCatsorDogs), shows that dog complaints made by people are disproportionately higher than people who have filed a complaint against cats.
 
-### What are the most popular complaints in Brisbane?
+### What are the most frequent complaints in Brisbane?
 
 ```{r brisbanecomplaints}
-brisbane_complaints_category <- brisbane_complaints  %>% select(category)
-brisbane_complaints_category <- brisbane_complaints_category %>% group_by(category) %>% tally()
+brisbane_complaints_category <- brisbane_complaints  %>% select(category) #selecting category
+
+brisbane_complaints_category <- brisbane_complaints_category %>% 
+  group_by(category) %>% 
+  tally()                   #getting tally of the compalints made in brisbane
+
 brisbane_complaints_category <- na.omit(brisbane_complaints_category)
 ```
 
