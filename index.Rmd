@@ -103,7 +103,7 @@ library(kableExtra)
 tuesdata <- tidytuesdayR::tt_load(2020, week = 30) #downloading the data set as instructed in the git repo
 ```
 
-```{r cache=TRUE}
+```{r data, cache=TRUE}
 animal_outcomes <- tuesdata$animal_outcomes  #seperating the data files for easier navigation
 animal_complaints <- tuesdata$animal_complaints
 brisbane_complaints <- tuesdata$brisbane_complaints
@@ -373,7 +373,7 @@ ggplotly(p2)
 
 In Figure  \@ref(fig:p2), from 1999 to 2018 the number of reclaimed cats has been stable, while the number of reclaimed dogs has fluctuated over the years. 2009 was a good year for dogs.
 
-### While we are at the subject of Cats Vs Dogs 
+### While we are at the subject of Cats Vs Dogs, who gets the most complaints? 
 
 ```{r complaints}
 x1 <- animal_complaints %>% 
@@ -387,18 +387,41 @@ p4e <- x1 %>% ggplot(aes(x = Animal.Type,
                  y = freq)) + 
   geom_bar(stat="identity", 
            fill="yellow") + 
-  ylab("number of complaints") + xlab(" ")
+  ylab("number of complaints") + xlab(" ") +  ggtitle("Complaints Launched")
 
 ggplotly(p4e)
 ```
 
 Figure  \@ref(fig:ComplaintsagainstwhoCatsorDogs), shows that dog complaints made by people are disproportionately higher than people who have filed a complaint against cats.
 
+### What are the most popular complaints in Brisbane?
+
+```{r brisbanecomplaints}
+brisbane_complaints_category <- brisbane_complaints  %>% select(category)
+brisbane_complaints_category <- brisbane_complaints_category %>% group_by(category) %>% tally()
+brisbane_complaints_category <- na.omit(brisbane_complaints_category)
+```
+
+```{r treemap}
+library(treemapify)
+ p9 <- ggplot(brisbane_complaints_category, ggplot2::aes(area = n,label = category, fill = category)) + 
+ geom_treemap() + 
+  geom_treemap_text( stat = "identity", position = "identity", 
+  na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, 
+  padding.x = grid::unit(1, "mm"), padding.y = grid::unit(1, "mm"), 
+  place = "topleft", min.size = 4, grow = FALSE, 
+  reflow = FALSE, fixed = NULL, layout = "squarified", start = "bottomleft") 
+p9 
+```
+
 
 # Analysis and findings
 
 [FILL] Should include at least one plot or numerical summary for each of your questions, that helps the reader arrive at an answer. You should also write paragraphs describing the methods, summaries and findings. 
 
+###methods 
+### summary
+### findings
 
 
 
