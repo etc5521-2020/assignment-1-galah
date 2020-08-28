@@ -462,6 +462,8 @@ Figure  \@ref(fig:treemap), shows us that in Brisbane the highest complaint rate
 
 # Conclusion
 
+In conclusion RSPCA does what is best for the animals, there may be other factors involved such as state laws, size of the state, wild life concentration, population in the state, that needs to be taken under consideration when looking at things such as good outcome rates, euthanization counts, rehomed animals etc. 
+
 
 The R packages we used in this report: 
 @tidytuesdayR
