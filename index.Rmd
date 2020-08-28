@@ -140,6 +140,10 @@ brisbane_complaints <- tuesdata$brisbane_complaints
 
 ## Q1: Which state has highest rate for the best possible outcome for animals?
 
+-> Animals are taken into care by RSPCA animals that are neglected, animals that are reported, and animals that require care. sometimes RSPCA has to make a tough decision of euthanizing the animal, which is the most humane alternative, the reason could be medical, behavioural problems, etc. 
+
+There are other outcomes too, rehomed, in care, in stock, reclaimed, etc. Anything other than euthanization is a good outcome. Let us look at the animals saved by RSPCA or the rescue rate. 
+
 ```{r loading rds map}
 
 aus_map <- readRDS("oz_map.rds") #loading the rds map file 
@@ -181,7 +185,8 @@ q11 <- q11 %>%  mutate(good_outcome = (rowSums(q11[,c(-1,-3)]))/rowSums(q11[,c(-
 
 ```{r getting the states up}
 aus_map_states <- aus_map %>% 
-  left_join(q12, by = c("state_abb" = "State")) #joining data sets by states
+  left_join(q12, by = c("state_abb" = "State"))  #joining data sets by states
+ 
 
 ```
 
@@ -197,7 +202,6 @@ state_plot <- ggplot(aus_map_states,
   labs(subtitle="Animals saved by RSPCA", 
        y=" ", 
        x=" ", 
-       title="Animal survival rate", 
        caption = "Australia Rescue rate")+ #getting the captions and titles
   geom_sf_text(aes(label = state), 
                colour = "white")
@@ -217,8 +221,8 @@ state_plot <- ggplot(aus_map_states,
 ```
 
 
-```{r Animalsurvivalrate, fig.height=8, fig.width=10,fig.cap="Australia Rescue rate"}
-state_plot
+```{r Animalsurvivalrate, fig.height=12, fig.width=12,fig.cap="Australia Rescue rate"}
+state_plot 
 ```
 
 
@@ -232,7 +236,7 @@ Figure  \@ref(fig:Animalsurvivalrate), shows the rate of animals that are in the
 
 ## Q2: Which animal is euthanized the most throughout Australia?
 
-
+-> There are lot of animals that pass through RSPCA let us look at which animal is euthanized the most by RSPCA in Australia.
 
 ```{r getting counts, include=FALSE}
 animal_outcomes  %>% group_by( year,
@@ -272,7 +276,7 @@ q2 <- animal_outcomes %>% filter(outcome == "Euthanized") %>%
 ```
 
 
-```{r AustraliaEuthanizationcount, fig.width=10, fig.cap="Animal Euthanization count"}
+```{r AustraliaEuthanizationcount, fig.width=8, fig.height=8, fig.cap="Animal Euthanization count"}
 options(scipen=999)
  p2 <- ggplot(q2,
               aes(x =reorder(animal_type, 
@@ -295,6 +299,8 @@ Figure  \@ref(fig:AustraliaEuthanizationcount), shows us the euthanization count
 
 
 ## Q3: What is the percentage of rehomed animals state wise?
+
+-> In which state do animals have better odds of being rehomed. 
 
 ```{r Rehomed}
 animal_outcomes2 <- animal_outcomes %>%
@@ -378,7 +384,7 @@ In Figure  \@ref(fig:plot3), it is clear that the highest proportion of animals 
 ## Q4: Cats versus dogs who are more likely to get reclaimed?
  
 
-
+-> A very interesting question are there more cat people or dog people. 
 
 
 ```{r screening}
@@ -387,7 +393,7 @@ animal_outcomes3 <- animal_outcomes %>%
   filter(animal_type == c("Dogs", "Cats")) #filtering required animal types
 ```
 
-```{r plot4, fig.width = 8, fig.height = 8, fig.cap="Reclaimed animals: Timeline", fig.align= "center"}
+```{r plot4, fig.width = 8, fig.height = 6, fig.cap="Reclaimed animals: Timeline", fig.align= "center"}
 p4 <-  ggplot(animal_outcomes3, 
               aes( x = year,
               y = Total, 
