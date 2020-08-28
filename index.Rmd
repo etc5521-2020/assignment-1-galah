@@ -387,7 +387,7 @@ p4e <- x1 %>% ggplot(aes(x = Animal.Type,
                  y = freq)) + 
   geom_bar(stat="identity", 
            fill="yellow") + 
-  ylab("complaint_count") + xlab("cat/Vs/dog")
+  ylab("number of complaints") + xlab(" ")
 
 ggplotly(p4e)
 ```
