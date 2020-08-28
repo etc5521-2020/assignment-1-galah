@@ -21,6 +21,18 @@ Animals are all around us in the sky, in the oceans, in our backyards and in our
 
 The RSPCA is Australia's oldest, largest and most trusted animal welfare organization, according to its description, there is a gradual increase in the number of animals every year which are received in animal shelters and adoption centres across the country. RSPCA decides to analyse the results of animals in Australia and help them.
 
+While looking online and researching on RSPCA we came across many articles that were indirectly blaming RSPCA for their high euthanize rates and some individuals who saw the worst side of RSPCA. That got us interested in the outcomes from RSPCA and as RSPCA operates state wise. After a while it raised a question which animal is euthanized most.
+
+
+[https://mobile.abc.net.au/news/2020-02-26/rscpa-qld-issues-apology-after-accidentally-euthanasing-kitten/12001668]: here
+
+We also came across multiple articles and web pages dedicated to adoption of animals that have been in the care of RSPCA. We wanted to know which state rehomes the most animals. 
+
+Finally, cat person or dog person a comparison between the 2 types of people out there, which lost pet is most likely to get reclaimed.
+
+## Limitations
+
+
 
 # Data description
 
@@ -182,7 +194,7 @@ state_plot
 
 
 
-Figure  \@ref(fig:Animal survival rate), shows the rate of animals that are in the care of RSPCA, find a good outcome, from the year 1999 to 2018, where animals can be either reclaimed, rehomed, released, in stock, transfered or be currently in care. The plot clearly shows Western Australia to have the highest good outcome rate of over 75%, while sadly New South Wales has the lowest good outcome rate of 55%. Otherwise meaning that the rest of the 45% of animals are euthanized.  
+Figure  \@ref(fig:Animal survival rate), shows the rate of animals that are in the care of RSPCA, find a good outcome, from the year 1999 to 2018, where animals can be either reclaimed, rehomed, released, in stock, transferred or be currently in care. The plot clearly shows Western Australia to have the highest good outcome rate of over 75%, while sadly New South Wales has the lowest good outcome rate of 55%. Otherwise meaning that the rest of the 45% of animals are euthanized.  
 
 
 
@@ -359,7 +371,7 @@ p2 <-  ggplot(animal_outcomes3,
 ggplotly(p2)
 ```
 
-In Figure  \@ref(fig:p2), from 1999 to 2018 the number of reclaimed cats has been stable more or less, while the number of reclaimed dogs has flunctuated over the years. 2009 was a good year for dogs.
+In Figure  \@ref(fig:p2), from 1999 to 2018 the number of reclaimed cats has been stable, while the number of reclaimed dogs has fluctuated over the years. 2009 was a good year for dogs.
 
 ### While we are at the subject of Cats Vs Dogs 
 
@@ -380,7 +392,7 @@ p4e <- x1 %>% ggplot(aes(x = Animal.Type,
 ggplotly(p4e)
 ```
 
-Figure  \@ref(fig:Complaints against who Cats or Dogs), shows that dog complaints made by people are dispropotionatly more higher then poeple who have filed a complaint against cats. 
+Figure  \@ref(fig:Complaints against who Cats or Dogs), shows that dog complaints made by people are disproportionately higher than people who have filed a complaint against cats.
 
 
 # Analysis and findings
