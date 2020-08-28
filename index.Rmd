@@ -29,43 +29,70 @@ Finally, cat person or dog person a comparison between the 2 types of people out
 
 ## Limitations
 
+The animal_outcomes data set has not specified that suburbs, which limits our approach to identify which suburb has the most common complaint type. Which can also help to identify which suburb has the most animal type too by looking into the animal type the complaint was made against. Similarly, the electoral divisions are of no significance in relation to the data frame they are not specified and are not easy to distinguish. 
+
+In the animal_complaints data set the question that comes up is of adoption which the outcome variable talks about reclaimed and rehomed, but it does not tell us if the animals were reclaimed or rehomed in the same state.   
+
+In the brisbane_complaints data set the date range is difficult to apprehend, because of fluctuating ranges and inconsistencies. 
+
 
 
 # Data description
 
 There are three data tables separately coming from the RSPCA, Townsville Animal Complaints and Brisbane Open Data - Animal Complaints.
 
-1. animal_outcomes.csv
+__1. animal_outcomes.csv__
 
 *year*: Full year
+
 *animal_type*: Animal type (horse, wildlife, dog, cat, etc)
+
 *outcome*: 	Animal outcome - euthanized, released, rehomed, etc
+
 *ACT*: ACT - Australian Capital Territory
+
 *NSW*: New South Wales
+
 *NT*: Northern Territory
+
 *QLD*: Queensland
+
 *SA*: South Australia
+
 *TAS*: Tasmania
+
 *VIC*: Victoria
+
 *WA*: Western Australian
+
 *Total*: Australian Total
 
-2. animal_complaints.csv
+__2. animal_complaints.csv__
 
 *Animal Type*: Animal Type
+
 *Complaint Type*: Complaint type
+
 *Date Received*: Date received (Month - year)
+
 *Suburb*: Suburb/region
+
 *Electoral Division*: Electoral Division
 
-3. brisbane_complaints.csv
+__3. brisbane_complaints.csv__
 
 *nature*:	Nature of complaints (animal)
+
 *animal_type*: Animal type
+
 *category*: Category of complaint
+
 *suburb*: Suburb where reported
+
 *date_range*: Date range (typically 1 quarter + year)
+
 *responsible_office*: Responsible office for the complaint
+
 *city*: City (Brisbane)
 
 
@@ -95,7 +122,7 @@ library(kableExtra)
 library(treemapify)
 ```
 
-```{r load-data, echo=FALSE, message=FALSE, cache=TRUE}
+```{r load-data, echo=FALSE, message=FALSE, cache=TRUE, include=FAlse}
 
 tuesdata <- tidytuesdayR::tt_load(2020, week = 30) #downloading the data set as instructed in the git repo
 ```
