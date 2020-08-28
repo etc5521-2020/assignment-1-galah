@@ -17,13 +17,13 @@ output:
 
 # Introduction and motivation
 
-Animals are all around us in the sky, in the oceans, in our backyards and in our homes. What happens to animals in trouble, it could be cats, dogs, horses or livestock? Who takes care of them when they are in trouble or are lost? The answer is Royal Society for the Prevention of cruelty to Animals.You can find more about RSPCA or Royal Society for the Prevention of Cruelty to Animals [here](https://www.rspca.org.au/about-us).  
+Animals are all around us in the sky, in the oceans, in our backyards and in our homes. What happens to animals in trouble, it could be cats, dogs, horses or livestock? Who takes care of them when they are in trouble or are lost? The answer is Royal Society for the Prevention of cruelty to Animals.You can find more about RSPCA or Royal Society for the Prevention of Cruelty to Animals @About_Us.  
 
 The RSPCA is Australia's oldest, largest and most trusted animal welfare organization, according to its description, there is a gradual increase in the number of animals every year which are received in animal shelters and adoption centres across the country. RSPCA decides to analyse the results of animals in Australia and help them.
 
-While looking online and researching on RSPCA we came across many articles that were indirectly blaming RSPCA for their high euthanize rates and some individuals who saw the worst side of RSPCA. That got us interested in the outcomes from RSPCA and as RSPCA operates state wise. After a while it raised a question which animal is euthanized most. [here](https://mobile.abc.net.au/news/2020-02-26/rscpa-qld-issues-apology-after-accidentally-euthanasing-kitten/12001668)
+While looking online and researching on RSPCA we came across many articles that were indirectly blaming RSPCA for their high euthanize rates and some individuals who saw the worst side of RSPCA. That got us interested in the outcomes from RSPCA and as RSPCA operates state wise. After a while it raised a question which animal is euthanized most. @powell_2020
 
-We also came across multiple articles and web pages dedicated to adoption of animals that have been in the care of RSPCA. We wanted to know which state rehomes the most animals. If you are interested please clink this [link](https://www.rspca.org.au/adopt-pet)
+We also came across multiple articles and web pages dedicated to adoption of animals that have been in the care of RSPCA. We wanted to know which state rehomes the most animals. If you are interested please clink this @Adopt_A_Pet
 
 Finally, cat person or dog person a comparison between the 2 types of people out there, which lost pet is most likely to get reclaimed.
 
