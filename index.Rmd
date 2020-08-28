@@ -96,6 +96,7 @@ library(tmaptools)
 library(sf)
 library(broom)
 library(kableExtra)
+library(treemapify)
 ```
 
 ```{r load-data, echo=FALSE, message=FALSE, cache=TRUE}
@@ -403,16 +404,32 @@ brisbane_complaints_category <- na.omit(brisbane_complaints_category)
 ```
 
 ```{r treemap}
-library(treemapify)
- p9 <- ggplot(brisbane_complaints_category, ggplot2::aes(area = n,label = category, fill = category)) + 
+
+ p9 <- ggplot(brisbane_complaints_category, 
+              ggplot2::aes(area = n,
+                           label = category, 
+                           fill = category)) + 
  geom_treemap() + 
-  geom_treemap_text( stat = "identity", position = "identity", 
-  na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, 
-  padding.x = grid::unit(1, "mm"), padding.y = grid::unit(1, "mm"), 
-  place = "topleft", min.size = 4, grow = FALSE, 
-  reflow = FALSE, fixed = NULL, layout = "squarified", start = "bottomleft") 
-p9 
+  geom_treemap_text( stat = "identity", 
+                     position = "identity", 
+  na.rm = FALSE, 
+  show.legend = FALSE, 
+  inherit.aes = TRUE, 
+  padding.x = grid::unit(1, "mm"), 
+  padding.y = grid::unit(1, "mm"), 
+  place = "topleft", 
+  min.size = 4, 
+  grow = FALSE, 
+  reflow = FALSE, 
+  fixed = NULL, 
+  layout = "squarified", 
+  start = "bottomleft") 
+p9 +  ggtitle("Complaints made in Brisbane")
 ```
+
+Figure  \@ref(fig:treemap), shows us that in Brisbane the highest complaint rate is Fencing issues, followed by wandering animals, attack on animals and attack on a person. 
+
+
 
 
 # Analysis and findings
