@@ -75,7 +75,6 @@ There are three data tables separately coming from the RSPCA, Townsville Animal 
 
 
  
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = F, message = FALSE, warning = FALSE)
 ```
@@ -98,16 +97,16 @@ library(broom)
 library(kableExtra)
 ```
 
-```{r load-data, echo=FALSE}
+```{r load-data, echo=FALSE, message=FALSE, cache=TRUE}
 
 tuesdata <- tidytuesdayR::tt_load(2020, week = 30) #downloading the data set as instructed in the git repo
+```
 
+```{r cache=TRUE}
 animal_outcomes <- tuesdata$animal_outcomes  #seperating the data files for easier navigation
 animal_complaints <- tuesdata$animal_complaints
 brisbane_complaints <- tuesdata$brisbane_complaints
-
 ```
-
 
 
 
@@ -162,7 +161,8 @@ aus_map_states <- aus_map %>%
 ```
 
 
-```{r Animal-survival-rate, fig.width = 10, fig.height = 8, fig.cap="Animal survival rate", fig.align= "center"}
+
+```{r Animalsurvivalrate, fig.height=8, fig.width=10,fig.cap="Australia Rescue rate", message=FALSE, warning=FALSE}
 state_plot <- ggplot(aus_map_states, 
                      aes(x = longitude, 
                          y = latitude, 
@@ -173,7 +173,7 @@ state_plot <- ggplot(aus_map_states,
        y=" ", 
        x=" ", 
        title="Animal survival rate", 
-       caption = "Australia Euthanization rate")+ 
+       caption = "Australia Rescue rate")+ 
   geom_sf_text(aes(label = state), 
                colour = "white")
   scale_fill_viridis_c( "alpha = 1",
@@ -194,7 +194,8 @@ state_plot
 
 
 
-Figure  \@ref(fig:Animal-survival-rate), shows the rate of animals that are in the care of RSPCA, find a good outcome, from the year 1999 to 2018, where animals can be either reclaimed, rehomed, released, in stock, transferred or be currently in care. The plot clearly shows Western Australia to have the highest good outcome rate of over 75%, while sadly New South Wales has the lowest good outcome rate of 55%. Otherwise meaning that the rest of the 45% of animals are euthanized.  
+Figure  \@ref(fig:Animalsurvivalrate), shows the rate of animals that are in the care of RSPCA, find a good outcome, from the year 1999 to 2018, where animals can be either reclaimed, rehomed, released, in stock, transferred or be currently in care. The plot clearly shows Western Australia to have the highest good outcome rate of over 75%, while sadly New South Wales has the lowest good outcome rate of 55%. Otherwise meaning that the rest of the 45% of animals are euthanized.  
+
 
 
 
@@ -242,7 +243,8 @@ q2 <- animal_outcomes %>% filter(outcome == "Euthanized") %>%
  q2$total_animals_euthanised = rowSums(q2[,c(-1)], na.rm=TRUE)
 ```
 
-```{r Australia-Euthanization-count, fig.width = 10, fig.height = 8, fig.cap="Australia Euthanization rate", fig.align= "center"}
+
+```{r AustraliaEuthanizationcount, fig.width=10, fig.cap="Animal Euthanization count"}
 options(scipen=999)
  p2 <- ggplot(q2,
               aes(x =reorder(animal_type, 
@@ -261,7 +263,7 @@ options(scipen=999)
 ggplotly(p2)
 ```
 
-Figure  \@ref(fig:Australia-Euthanization-count), shows us the euthanization count by animal type throughout Australia from the year 1999 to 2018. Cats have the highest recorded euthanization count at 553,956 in Australia under the care of RSPCA. 
+Figure  \@ref(fig:AustraliaEuthanizationcount), shows us the euthanization count by animal type throughout Australia from the year 1999 to 2018. Cats have the highest recorded euthanization count at 553,956 in Australia under the care of RSPCA. 
 
 
 ## Q3: What is the percentage of rehomed animals state wise?
@@ -344,6 +346,7 @@ In Figure  \@ref(fig:plot3), it is clear that the highest proportion of animals 
 
 
 
+
 ## Q4: Cats Vs Dogs who are more likely to get reclaimed?
  
 
@@ -382,7 +385,8 @@ x1 <- animal_complaints %>%
 
 ```
 
-```{r Complaints-against-who-Cats-or-Dogs,fig.width = 8, fig.height = 8, fig.cap="Complaints against who Cats or Dogs", fig.align= "center"}
+
+```{r ComplaintsagainstwhoCatsorDogs, fig.cap="Complaints against who Cats or Dogs"}
 p4e <- x1 %>% ggplot(aes(x = Animal.Type, 
                  y = freq)) + 
   geom_bar(stat="identity", 
@@ -392,7 +396,9 @@ p4e <- x1 %>% ggplot(aes(x = Animal.Type,
 ggplotly(p4e)
 ```
 
-Figure  \@ref(fig:Complaints-against-who-Cats-or-Dogs), shows that dog complaints made by people are disproportionately higher than people who have filed a complaint against cats.
+
+Figure  \@ref(fig:ComplaintsagainstwhoCatsorDogs), shows that dog complaints made by people are disproportionately higher than people who have filed a complaint against cats.
+
 
 
 # Analysis and findings
