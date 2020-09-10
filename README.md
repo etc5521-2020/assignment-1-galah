@@ -6,6 +6,8 @@ Team members:
 
 * Sen Wang
 * Muhammad Soban Qasim
+* Lachlan Moody
+* Xitong He
 
 # Steps
 
