@@ -1,10 +1,12 @@
 ---
-title: "ETC5521 Assignment 1"
+title: "ETC5521 Assignment 2"
 subtitle: "Australian Animal Outcomes"
 team: galah
 author:
   - Sen Wang
   - Muhammad Soban Qasim
+  - Lachlan Moody
+  - Xitong He
 date: "`r Sys.Date()`"
 bibliography: references.bib
 biblio-style: authoryear-comp
@@ -12,7 +14,7 @@ output:
   bookdown::html_document2
 ---
 
-[This assignment is for ETC5521 Assignment 1 by Team `r rmarkdown::metadata$team` comprising of `r knitr::combine_words(rmarkdown::metadata$author)`.]{style="color:#006DAE;"}
+[This assignment is for ETC5521 Assignment 2 by Team `r rmarkdown::metadata$team` comprising of `r knitr::combine_words(rmarkdown::metadata$author)`.]{style="color:#006DAE;"}
 
 
 # Introduction and motivation
@@ -376,12 +378,12 @@ ggplotly(p3)
 
 In Figure  \@ref(fig:plot3), it is clear that the highest proportion of animals were relocated in WA and the lowest proportion in QLD, but the difference between them is so much as only 13 percent. This also corroborates with Figure  \@ref(fig:Animalsurvivalrate) in terms of good outcome. 
 
+## Q4: Is there a relationship between the type of animal and its outcome?
 
 
 
 
-
-## Q4: Cats versus dogs who are more likely to get reclaimed?
+## Q5: Cats versus dogs who are more likely to get reclaimed?
  
 
 -> A very interesting question are there more cat people or dog people. 
@@ -471,7 +473,7 @@ p9 +  ggtitle("Complaints made in Brisbane")
 
 Figure  \@ref(fig:treemap), shows us that in Brisbane the highest complaint rate is Fencing issues, followed by wandering animals, attack on animals, and attack on a person. 
 
-
+## Q6: How the different type of complaints are distributed in dogs and cats?
 
 
 
