@@ -122,6 +122,8 @@ library(sf)
 library(broom)
 library(kableExtra)
 library(treemapify)
+library(leaflet)
+library(forcats)
 ```
 
 ```{r load-data, echo=FALSE, message=FALSE, cache=TRUE, include=FALSE}
@@ -140,19 +142,19 @@ brisbane_complaints <- tuesdata$brisbane_complaints
 # Questions
 
 
-## Q1: Which state has highest rate for the best possible outcome for animals?
+## Q1: How are animal outcomes distributed across Australia?
 
 -> Animals are taken into care by RSPCA animals that are neglected, animals that are reported, and animals that require care. sometimes RSPCA has to make a tough decision of euthanizing the animal, which is the most humane alternative, the reason could be medical, behavioural problems, etc. 
 
 There are other outcomes too, rehomed, in care, in stock, reclaimed, etc. Anything other than euthanization is a good outcome. Let us look at the animals saved by RSPCA or the rescue rate. 
 
-```{r loading rds map}
+```{r rdsmap}
 
 aus_map <- readRDS("oz_map.rds") #loading the rds map file 
 
 ```
 
-```{r calculating good outcomes}
+```{r goodoutcomes}
 
 q1 <- animal_outcomes %>% select(-year, 
                    -animal_type) %>% 
@@ -178,129 +180,123 @@ q11 <-  pivot_longer(q1, `ACT`:`WA`,
 
 q11 <- q11 %>%  mutate(good_outcome = (rowSums(q11[,c(-1,-3)]))/rowSums(q11[,c(-1)])*100) #calculating percentage of good outcomes by taking out euthanization and dividing it by the total number of outcomes per state 
 
-                                                                                                    q12 <- q11 %>% select(State, 
-                                                                                                                         good_outcome)           #selecting variables for ease 
+                                                                                                    
+q12 <- q11 %>% select(State,                                                                                                       good_outcome)           #selecting variables for ease 
                                                                                                     
                                                                                                     
 ```
 
 
-```{r getting the states up}
+```{r states}
 aus_map_states <- aus_map %>% 
   left_join(q12, by = c("state_abb" = "State"))  #joining data sets by states
  
 
 ```
 
+```{r leaflet, fig.cap="Positive animal outcomes by state"}
+colours <- aus_map_states$good_outcome
 
+cpal <- colorNumeric("Blues", colours)
 
-```{r survivalrate, fig.height=8, fig.width=10,fig.cap="Australia Rescue rate", message=FALSE, warning=FALSE, include=FALSE}
-state_plot <- ggplot(aus_map_states, 
-                     aes(x = longitude, 
-                         y = latitude, 
-                         fill = good_outcome)) + #plotting the data on the map
-  geom_sf() + aes(x = longitude, 
-                  y = latitude) +   
-  labs(subtitle="Animals saved by RSPCA", 
-       y=" ", 
-       x=" ", 
-       caption = "Australia Rescue rate")+ #getting the captions and titles
-  geom_sf_text(aes(label = state), 
-               colour = "white")
-  scale_fill_viridis_c( "alpha = 1",
-  "begin = 0",
-  "end = 100",
-  "direction = 1",
-  option = "D",
-  values = NULL,  
-  space = "Lab",
-  na.value = "black",
-  guide = "colourbar",
-  aesthetics = "fill"
-) 
-  
-
+leaflet(aus_map_states) %>%
+  addProviderTiles("CartoDB.Positron") %>%
+  addPolygons(stroke = FALSE,
+              smoothFactor = 0.2,
+              fillOpacity = 1,
+              label = paste0(aus_map_states$state, " ", round(aus_map_states$good_outcome, digits = 2), "%"),
+              color = ~cpal(good_outcome)) %>%
+  addLegend("bottomleft", pal = cpal, values = ~good_outcome,
+            title = "Percentage of Positive Outcomes",
+            labFormat = labelFormat(suffix = "%"))
 ```
 
+Figure  \@ref(fig:leaflet), shows the rate of animals that are in the care of RSPCA, find a good outcome, from the year 1999 to 2018, where animals can be either reclaimed, rehomed, released, in stock, transferred, or be currently in care. The plot clearly shows Western Australia to have the highest good outcome rate of over 75%, while sadly New South Wales has the lowest good outcome rate of 55%. Otherwise meaning that the rest of the 45% of animals are euthanized.  
 
-```{r Animalsurvivalrate, fig.height=12, fig.width=12,fig.cap="Australia Rescue rate"}
-state_plot 
-```
-
-
-Figure  \@ref(fig:Animalsurvivalrate), shows the rate of animals that are in the care of RSPCA, find a good outcome, from the year 1999 to 2018, where animals can be either reclaimed, rehomed, released, in stock, transferred, or be currently in care. The plot clearly shows Western Australia to have the highest good outcome rate of over 75%, while sadly New South Wales has the lowest good outcome rate of 55%. Otherwise meaning that the rest of the 45% of animals are euthanized.  
-
-
-
-
-
-
-
-## Q2: Which animal is euthanized the most throughout Australia?
-
--> There are lot of animals that pass through RSPCA let us look at which animal is euthanized the most by RSPCA in Australia.
-
-```{r getting counts, include=FALSE}
-animal_outcomes  %>% group_by( year,
-                 outcome, 
-                 animal_type) %>%                         
+How has this changed over time?
+```{r}
+library(ggridges)
+yearly_aus <- animal_outcomes %>% 
+  group_by(outcome, year) %>% 
   summarise_at(vars(ACT, 
                     NSW, 
                     NT, 
                     QLD, 
                     SA, 
                     TAS, 
-                    VIC),  
-               list( sum)) 
+                    VIC, 
+                    WA),  
+               list( sum),na.rm=TRUE) %>% 
+  pivot_longer(`ACT`:`WA`, 
+                     names_to = "State", 
+                     values_to = "outcomes") %>%
+  group_by(year, State) %>%
+  summarise(good_outcome = sum(outcomes[outcome != "Euthanized"])/sum(outcomes)*100) %>%
+  mutate(year = as.factor(year))
 
-q2 <- animal_outcomes %>% filter(outcome == "Euthanized") %>% 
-  select(animal_type, 
-         ACT, 
-         NSW, 
-         NT, 
-         QLD, 
-         SA, 
-         TAS, 
-         VIC, 
-         WA) %>%  
-  group_by(animal_type) %>%                         
-  summarise_at(vars(ACT,          #getting sums with respect to state
+
+
+yearly_aus %>%
+  mutate(year = fct_rev(year)) %>%
+  ggplot(aes(x = good_outcome, y = year)) +
+  geom_density_ridges(scale = 4) +
+  theme_bw() +
+  labs(x = "Percentage of Positive Outcomes", y = "Year") +
+  ggtitle("Change in positve outcomes over time")
+```
+
+
+We can also look at how this has changed for each state.
+
+```{r time}
+yearly_outcomes <- yearly_aus %>%
+  mutate(year = as.numeric(year) + 2000)
+
+yearlyplot <- yearly_outcomes %>%
+  ggplot(aes(x = year, y = good_outcome)) +
+  geom_line() +
+  facet_wrap(~ State) +
+  theme_bw() +
+  labs(x = "", y = "") +
+  ggtitle("Change in positve outcomes over time per state")
+
+ggplotly(yearlyplot) %>%
+  config(displayModeBar = F)
+```
+
+And also by animal
+```{r animaltime, fig.width=10, fig.height=10}
+yearly_animal <- animal_outcomes %>%
+  group_by(outcome, animal_type, year)%>% 
+  summarise_at(vars(ACT, 
                     NSW, 
                     NT, 
                     QLD, 
                     SA, 
                     TAS, 
                     VIC, 
-                    WA),            
-               list(" " = sum)) 
+                    WA),  
+               list( sum),na.rm=TRUE) %>% 
+  pivot_longer(`ACT`:`WA`, 
+                     names_to = "State", 
+                     values_to = "outcomes") %>%
+  group_by(animal_type, year, State) %>%
+  summarise(good_outcome = sum(outcomes[outcome != "Euthanized"])/sum(outcomes) * 100)
 
- q2$total_animals_euthanised = rowSums(q2[,c(-1)], na.rm=TRUE) #getting the sum of total animals euthanized
+animalplot <- yearly_animal %>%
+  ggplot(aes(x = year, y = good_outcome)) +
+  geom_line() +
+  facet_grid(State ~ animal_type) +
+  theme_bw() +
+  labs(x = "", y = "") +
+  ggtitle("Change in positve outcomes over time by animal") +
+  scale_x_continuous(breaks = c(2000,2008,2016), limits = c(1999,2018)) +
+  scale_y_continuous(breaks = c(0,50,100), limits = c(-10,110))
+
+ggplotly(animalplot) %>%
+  config(displayModeBar = F)
 ```
 
-
-```{r AustraliaEuthanizationcount, fig.width=8, fig.height=8, fig.cap="Animal Euthanization count"}
-options(scipen=999)
- p2 <- ggplot(q2,
-              aes(x =reorder(animal_type, 
-                             -total_animals_euthanised), #arranging the plot
-                  y =  total_animals_euthanised)) + 
-   geom_bar(stat="identity", 
-            fill="tomato3") +                          #adding color
-   labs(subtitle="Which animal is the most euthanized", 
-       y="Count", 
-       x="Animals", 
-       title="Australia Euthanization count",                   #giving title
-       caption = "Australia Euthanization rate") + 
-  theme(axis.text.x = element_text(angle=45, vjust=0.9)) + 
-   ylim(c(0, 600000)) 
-
-ggplotly(p2)
-```
-
-Figure  \@ref(fig:AustraliaEuthanizationcount), shows us the euthanization count by animal type throughout Australia from the year 1999 to 2018. Cats have the highest recorded euthanization count at 553,956 in Australia under the care of RSPCA. 
-
-
-## Q3: What is the percentage of rehomed animals state wise?
 
 -> In which state do animals have better odds of being rehomed. 
 
@@ -378,9 +374,68 @@ ggplotly(p3)
 
 In Figure  \@ref(fig:plot3), it is clear that the highest proportion of animals were relocated in WA and the lowest proportion in QLD, but the difference between them is so much as only 13 percent. This also corroborates with Figure  \@ref(fig:Animalsurvivalrate) in terms of good outcome. 
 
-## Q4: Is there a relationship between the type of animal and its outcome?
+## Q2: Is there a relationship between the type of animal and its outcome?
+
+-> There are lot of animals that pass through RSPCA let us look at which animal is euthanized the most by RSPCA in Australia.
+
+```{r getting counts, include=FALSE}
+animal_outcomes  %>% group_by( year,
+                 outcome, 
+                 animal_type) %>%                         
+  summarise_at(vars(ACT, 
+                    NSW, 
+                    NT, 
+                    QLD, 
+                    SA, 
+                    TAS, 
+                    VIC),  
+               list( sum)) 
+
+q2 <- animal_outcomes %>% filter(outcome == "Euthanized") %>% 
+  select(animal_type, 
+         ACT, 
+         NSW, 
+         NT, 
+         QLD, 
+         SA, 
+         TAS, 
+         VIC, 
+         WA) %>%  
+  group_by(animal_type) %>%                         
+  summarise_at(vars(ACT,          #getting sums with respect to state
+                    NSW, 
+                    NT, 
+                    QLD, 
+                    SA, 
+                    TAS, 
+                    VIC, 
+                    WA),            
+               list(" " = sum)) 
+
+ q2$total_animals_euthanised = rowSums(q2[,c(-1)], na.rm=TRUE) #getting the sum of total animals euthanized
+```
 
 
+```{r AustraliaEuthanizationcount, fig.width=8, fig.height=8, fig.cap="Animal Euthanization count"}
+options(scipen=999)
+ p2 <- ggplot(q2,
+              aes(x =reorder(animal_type, 
+                             -total_animals_euthanised), #arranging the plot
+                  y =  total_animals_euthanised)) + 
+   geom_bar(stat="identity", 
+            fill="tomato3") +                          #adding color
+   labs(subtitle="Which animal is the most euthanized", 
+       y="Count", 
+       x="Animals", 
+       title="Australia Euthanization count",                   #giving title
+       caption = "Australia Euthanization rate") + 
+  theme(axis.text.x = element_text(angle=45, vjust=0.9)) + 
+   ylim(c(0, 600000)) 
+
+ggplotly(p2)
+```
+
+Figure  \@ref(fig:AustraliaEuthanizationcount), shows us the euthanization count by animal type throughout Australia from the year 1999 to 2018. Cats have the highest recorded euthanization count at 553,956 in Australia under the care of RSPCA. 
 
 
 ## Q5: Cats versus dogs who are more likely to get reclaimed?
