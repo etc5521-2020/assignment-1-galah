@@ -376,6 +376,33 @@ In Figure  \@ref(fig:plot3), it is clear that the highest proportion of animals 
 
 ## Q2: Is there a relationship between the type of animal and its outcome?
 
+We begin by looking at the overall data
+```{r matrix}
+library(GGally)
+ind_outcomes <- animal_outcomes %>%
+  group_by(animal_type, outcome) %>%
+  summarise(count = sum(Total))
+
+ovr_outcomes <- animal_outcomes %>%
+  group_by(animal_type) %>%
+  summarise(count = sum(Total))
+
+prop_outcomes <- left_join(ind_outcomes, ovr_outcomes, by = c ("animal_type" = "animal_type")) %>%
+  mutate(prop = count.x/count.y)
+
+prop_outcomes %>%
+  ggplot(aes(x = animal_type, y = prop, fill = animal_type)) +
+  geom_col() +
+  facet_wrap(~outcome) +
+  labs(x = "", y = "Proportionate Outcome", fill = "Animal Type") +
+  scale_x_discrete(breaks = NULL) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_brewer(palette = "Set2") +
+  ggtitle("Proportionate outcomes for different animals") +
+  theme_bw()
+```
+
+
 -> There are lot of animals that pass through RSPCA let us look at which animal is euthanized the most by RSPCA in Australia.
 
 ```{r getting counts, include=FALSE}
