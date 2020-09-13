@@ -427,13 +427,7 @@ animal_time_plot <- prop_outcomes_year %>%
 ggplotly(animal_time_plot) %>%
   config(displayModeBar = F)
 ```
-
-And what about by state?
-```{r animalstate, cache=TRUE, eval=FALSE}
-library(gganimate)
-library(transformr)
-
-
+```{r animdata}
 animal_state <-  animal_outcomes %>%
   pivot_longer(cols = ACT:WA, names_to = "State") %>%
   group_by(year, animal_type, outcome, State) %>%
@@ -451,6 +445,12 @@ top_outcomes <- prop_outcomes_state %>%
   group_by(State, year, animal_type) %>%
   arrange(prop) %>%
   top_n(1)
+```
+
+And what about by state?
+```{r animalstate, cache=TRUE, eval=FALSE}
+library(gganimate)
+library(transformr)
 
 fort_map <- fortify(aus_map)
 
@@ -473,12 +473,12 @@ anim <- newdf %>%
   geom_sf(aes(x = longitude, 
                   y = latitude,
               geometry = geometry)) +
-  ggtitle("Change in proportionate animal outcomes over time by state")
+  ggtitle("Change in proportionate animal outcomes over time by state") +
+  scale_fill_brewer(palette = "Set2") +
   theme_bw() +
   theme(axis.title = element_blank(),
         axis.text =  element_blank(),
         axis.ticks = element_blank()) +
-  scale_fill_brewer(palette = "Set2") +
   facet_wrap(~animal_type) +
   labs(title = 'Year: {frame_time}', fill = "Most Common Outcome") +
   transition_time(as.integer(year))
@@ -486,7 +486,7 @@ anim <- newdf %>%
 anim_save("anim.gif", anim)
 ```
 
-```{r}
+```{r, fig.cap="Change in proportionate animal outcomes over time by state"}
 knitr::include_graphics("anim.gif")
 ```
 
@@ -551,6 +551,61 @@ ggplotly(p2)
 ```
 
 Figure  \@ref(fig:AustraliaEuthanizationcount), shows us the euthanization count by animal type throughout Australia from the year 1999 to 2018. Cats have the highest recorded euthanization count at 553,956 in Australia under the care of RSPCA. 
+
+```{r model}
+library(DT)
+
+model_data <- prop_outcomes_state %>%
+  select(year, State, animal_type, outcome, prop) %>%
+  group_by(year, State, animal_type) %>%
+  pivot_wider(names_from = outcome, values_from = prop) %>%
+  mutate(State = as.factor(State),
+         animal_type = as.factor(animal_type)) %>%
+  rename("InStock" = "In Stock",
+         "InCare" = "Currently In Care")
+
+model_fun <- function(x) {
+  model <- lm(paste(x, "~", "animal_type"), data = model_data)
+  tidy(model) %>%
+    tidycat::tidy_categorical(model) %>%
+    dplyr::mutate(Outcome = x)
+}
+
+glance_fun <- function(x) {
+  model <- lm(paste(x, "~", "animal_type"), data = model_data)
+  glance(model) %>%
+    select(r.squared) %>%
+    mutate(Outcome = x)
+}
+
+model_table <- bind_rows(model_fun("Euthanized"),
+          model_fun("Reclaimed"),
+          model_fun("Rehomed"),
+          model_fun("Other"),
+          model_fun("InStock"),
+          model_fun("Transferred"),
+          model_fun("InCare"))  %>%
+  select(level, estimate, std.error, p.value, Outcome)
+
+glance_table <- bind_rows(glance_fun("Euthanized"),
+          glance_fun("Reclaimed"),
+          glance_fun("Rehomed"),
+          glance_fun("Other"),
+          glance_fun("InStock"),
+          glance_fun("Transferred"),
+          glance_fun("InCare"))
+
+comb_table <- left_join(model_table,
+                        glance_table) %>%
+  mutate_at(vars(estimate:std.error, r.squared), funs(round(., 3))) %>%
+  mutate(p.value = round(p.value, digits = 6)) %>%
+  select(Outcome, r.squared, level:p.value)
+
+datatable(comb_table,
+          rownames = FALSE, 
+          caption = "Outcome by animal type model statistics", 
+          class = "cell-border stripe")
+```
 
 
 ## Q5: Cats versus dogs who are more likely to get reclaimed?
