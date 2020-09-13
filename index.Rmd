@@ -142,7 +142,7 @@ brisbane_complaints <- tuesdata$brisbane_complaints
 # Questions
 
 
-## Q1: How are animal outcomes distributed across Australia?
+## Q1: How effective are the RSPCA at producing 'good outcomes' for animals in Australia?
 
 -> Animals are taken into care by RSPCA animals that are neglected, animals that are reported, and animals that require care. sometimes RSPCA has to make a tough decision of euthanizing the animal, which is the most humane alternative, the reason could be medical, behavioural problems, etc. 
 
@@ -377,8 +377,7 @@ In Figure  \@ref(fig:plot3), it is clear that the highest proportion of animals 
 ## Q2: Is there a relationship between the type of animal and its outcome?
 
 We begin by looking at the overall data
-```{r matrix}
-library(GGally)
+```{r animaloutcomes}
 ind_outcomes <- animal_outcomes %>%
   group_by(animal_type, outcome) %>%
   summarise(count = sum(Total))
@@ -400,6 +399,95 @@ prop_outcomes %>%
   scale_fill_brewer(palette = "Set2") +
   ggtitle("Proportionate outcomes for different animals") +
   theme_bw()
+```
+We can also look at how this has changed over time
+```{r animalovtime}
+ind_outcomes_yr <- animal_outcomes %>%
+  group_by(animal_type, outcome, year) %>%
+  summarise(count = sum(Total))
+
+ovr_outcomes_yr <- animal_outcomes %>%
+  group_by(animal_type, year) %>%
+  summarise(count = sum(Total))
+
+prop_outcomes_year <- left_join(ind_outcomes_yr, ovr_outcomes_yr, by = c ("animal_type" = "animal_type", "year" = "year")) %>%
+  mutate(prop = count.x/count.y)
+
+animal_time_plot <- prop_outcomes_year %>%
+  ggplot(aes(x = year, y = prop, colour = animal_type)) +
+  geom_line() +
+  facet_wrap(~outcome) +
+  scale_y_continuous(labels = scales::percent, breaks = c(.20,.40,.60)) +
+  scale_colour_brewer(palette = "Set2") +
+  scale_x_continuous(breaks = c(2000,2008,2016), limits = c(1999,2018)) +
+  labs(x = "", y = "", colour = "Animal Type") +
+  theme_bw() +
+  ggtitle("Change in proportionate animal outcomes over time")
+
+ggplotly(animal_time_plot) %>%
+  config(displayModeBar = F)
+```
+
+And what about by state?
+```{r animalstate, cache=TRUE, eval=FALSE}
+library(gganimate)
+library(transformr)
+
+
+animal_state <-  animal_outcomes %>%
+  pivot_longer(cols = ACT:WA, names_to = "State") %>%
+  group_by(year, animal_type, outcome, State) %>%
+  summarise(count = sum(value))
+
+animal_ovr <- animal_outcomes %>%
+  pivot_longer(cols = ACT:WA, names_to = "State") %>%
+  group_by(year, animal_type, State) %>%
+  summarise(count = sum(value))
+
+prop_outcomes_state <- left_join(animal_state, animal_ovr, by = c ("animal_type" = "animal_type", "year" = "year", "State" = "State")) %>%
+  mutate(prop = count.x/count.y)
+
+top_outcomes <- prop_outcomes_state %>%
+  group_by(State, year, animal_type) %>%
+  arrange(prop) %>%
+  top_n(1)
+
+fort_map <- fortify(aus_map)
+
+outcomes_map <- fort_map %>%
+  left_join(top_outcomes, by = c("state_abb" = "State"))
+
+
+newdf <- lapply(seq_len(5), function(i) {
+  new <- outcomes_map
+  new$group <- seq_len(nrow(new))
+  new$value <- sample(letters[1:4], nrow(new), replace = TRUE)
+  new$time <- i
+  new
+})
+newdf <- do.call(rbind, newdf)
+
+
+anim <- newdf %>%
+  ggplot(aes(fill = outcome, x = longitude, y = latitude, group = group)) +
+  geom_sf(aes(x = longitude, 
+                  y = latitude,
+              geometry = geometry)) +
+  ggtitle("Change in proportionate animal outcomes over time by state")
+  theme_bw() +
+  theme(axis.title = element_blank(),
+        axis.text =  element_blank(),
+        axis.ticks = element_blank()) +
+  scale_fill_brewer(palette = "Set2") +
+  facet_wrap(~animal_type) +
+  labs(title = 'Year: {frame_time}', fill = "Most Common Outcome") +
+  transition_time(as.integer(year))
+
+anim_save("anim.gif", anim)
+```
+
+```{r}
+knitr::include_graphics("anim.gif")
 ```
 
 
