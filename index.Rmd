@@ -31,75 +31,6 @@ Finally, cat person or dog person a comparison between the two types of people o
 
 
 
-
-
-# Data description
-
-There are three data tables separately coming from the RSPCA, Townsville Animal Complaints, and Brisbane Open Data - Animal Complaints.
-
-__1. animal_outcomes.csv__
-
-*year*: Full year
-
-*animal_type*: Animal type (horse, wildlife, dog, cat, etc)
-
-*outcome*: 	Animal outcome - euthanized, released, rehomed, etc
-
-*ACT*: ACT - Australian Capital Territory
-
-*NSW*: New South Wales
-
-*NT*: Northern Territory
-
-*QLD*: Queensland
-
-*SA*: South Australia
-
-*TAS*: Tasmania
-
-*VIC*: Victoria
-
-*WA*: Western Australian
-
-*Total*: Australian Total
-
-__2. animal_complaints.csv__
-
-*Animal Type*: Animal Type
-
-*Complaint Type*: Complaint type
-
-*Date Received*: Date received (Month - year)
-
-*Suburb*: Suburb/region
-
-*Electoral Division*: Electoral Division
-
-__3. brisbane_complaints.csv__
-
-*nature*:	Nature of complaints (animal)
-
-*animal_type*: Animal type
-
-*category*: Category of complaint
-
-*suburb*: Suburb where reported
-
-*date_range*: Date range (typically 1 quarter + year)
-
-*responsible_office*: Responsible office for the complaint
-
-*city*: City (Brisbane)
-
-## Limitations
-
-The animal_outcomes data set has not specified that suburbs, which limit our approach to identifying which suburb has the most common complaint type. This can also help to identify which suburb has the most animal type too by looking into the animal type the complaint was made against. Similarly, the electoral divisions are of no significance with the data frame they are not specified and are not easy to distinguish. 
-
-In the animal_complaints data set the question that comes up is of adoption which the outcome variable talks about reclaimed and rehomed, but it does not tell us if the animals were reclaimed or rehomed in the same state.   
-
-In the brisbane_complaints data set the date range is difficult to apprehend, because of fluctuating ranges and inconsistencies.
-
-
  
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = F, message = FALSE, warning = FALSE)
@@ -135,6 +66,80 @@ animal_complaints <- tuesdata$animal_complaints
 brisbane_complaints <- tuesdata$brisbane_complaints
 ```
 
+# Data description
+
+In this section, we will mainly introduce the data structure, data sources and data description.
+
+There are three data sets used on this analysis, and the cleaned data is obtained from [GitHub tidytuesday](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-07-21/readme.md).  
+
+The `animal_outcome` data source is from [source website](https://www.rspca.org.au/what-we-do/our-role-caring-animals/annual-statistics), which is the annual data from 1999 to 2018, consisting of `r nrow(animal_outcomes)` observation. It contains eight main states in Australia and the data structure and detail is shown as the below tables. 
+
+```{r outcome-data}
+outcome_data <- data.frame(
+  Variable = c("year", "animal_type", "outcome", "ACT", 
+               "NSW", "NT", "QLD", "SA","TAS","VIC","WA","Total"),
+  Class=c("double","character","character","double","double","double","double","double","double","double","double","double"),
+  Description = c("Full year","Animal type (horse, wildlife, dog, cat, etc)",
+                  "Animal outcome - euthanized, released, rehomed, etc",
+                  "ACT - Australian Capital Territory",
+                  "New South Wales",
+                  "Northern Territory",
+                  "Queensland",
+                  "South Australia",
+                  "Tasmania",
+                  "Victoria",
+                  "Western Australian",
+                  "Australian Total"))
+
+outcome_data %>%
+  kable(caption = "Animal outcomes data") %>%
+  kable_styling(bootstrap_options = 
+                c("striped", "condensed"), 
+                full_width = F, 
+                position = "center")
+```
+
+The `animal_complaints` data is from Australia government data [source sebsite](https://data.gov.au/data/dataset/animal-complaints), and the cleaned data is obtained from [Github tidytuesday](https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-21/animal_complaints.csv) which is from April 2014 to May 2020. It also contain `r nrow(animal_complaints)` observation with different type of animals and complaints. The variable information included in the data is displayed in the following table.
+
+```{r complaints-data}
+complaints_data <- tibble(Variable = c("Animal Type", "Complaint Type", "Date Received", "Suburb", "Electoral Division"),
+                          Class = c( "character", "character","character", "character","character"),
+                          Description = c("Animal Type", 
+                                          "Complaint type", 
+                                          "Date received (Month - year)", 
+                                          "Suburb/region", 
+                                          "Electoral Division")) 
+complaints_data %>%
+  kable(caption = "Animal complaints data") %>%
+  kable_styling(bootstrap_options = "striped", 
+                position = "center")
+```
+
+The `brisbane_complaints` data focus on the Brisbane city and it comes form Brisbane city council[source website](https://www.data.brisbane.qld.gov.au/data/dataset/96bec69c-6170-4ef0-93f1-eda279149b97), and the cleaned data is from [Github tidytuesday](https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-21/brisbane_complaints.csv). `r nrow(brisbane_complaints)` observation are recorded from February 2016 to December 2019 to in this dataset, and the animal type and complaint type are mainly used in this analysis. The following table is shown more details in this dataset:
+
+```{r brisbane-data}
+complaints_data <- tibble(Variable = c("nature", "animal_type", "category", "suburb", "date_range","responsible_office","city"),
+                          Class = c( "character", "character","character", "character","character","character", "character"),
+                          Description = c("Nature of complaints (animal)", 
+                                          "Animal type", 
+                                          "Category of complaint", 
+                                          "Suburb where reported", 
+                                          "Date range (typically 1 quarter + year)",
+                                          "Responsible office for the complaint",
+                                          "City (Brisbane)")) 
+complaints_data %>%
+  kable(caption = "Animal complaints data") %>%
+  kable_styling(bootstrap_options = "striped", 
+                position = "center")
+```
+
+## Limitations
+
+The `animal_outcomes` data set has not specified that suburbs, which limit our approach to identifying which suburb has the most common complaint type. This can also help to identify which suburb has the most animal type too by looking into the animal type the complaint was made against. Moreover, the number for the animals outcome might be effected by the different legislation governing the animal welfare.
+
+For the `animal_complaints` data ,the *Suburb* variable is only recorded the suburb from Queensland which makes analyze complaint issue more specific and not in the general perspective. Another limitation in this dataset is about animal type which are only contained two animals such as cat and dogs so it is limited to analyze people complaints problems and raise the deviation in results.
+  
+In the `brisbane_complaints` data set, the *date* variable range is difficult to apprehend, because of fluctuating ranges and inconsistencies. In addition, it is hard to re-defined the date variable as it mixed different types of date range such as quarterly and monthly data. Furthermore, Brisbane is the capital of Queensland, indicating that this dataset is still under Queensland State but the *suburb* variable become to be specified in the Brisbane city.
 
 
 # Questions
