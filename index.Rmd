@@ -16,22 +16,23 @@ output:
 
 [This assignment is for ETC5521 Assignment 2 by Team `r rmarkdown::metadata$team` comprising of `r knitr::combine_words(rmarkdown::metadata$author)`.]{style="color:#006DAE;"}
 
-
 # Introduction and motivation
 
-Animals are all around us in the sky, in the oceans, in our backyards, and our homes. What happens to these animals in trouble, it could be cats, dogs, horses, or livestock? Who takes care of them when they are in trouble or are lost? The answer is the Royal Society for the Prevention of Cruelty to Animals. You can find more about RSPCA or the Royal Society for the Prevention of Cruelty to Animals [here](https://www.rspca.org.au/). @About_Us.  
+The RSPCA is Australia’s oldest, largest and most trusted animal welfare organization and, according to its description, there is a gradual increase in the number of animals received each year in animal shelters and adoption centers across the country @About_Us. With this comes an ever increasing amount of pressure and stress on the organisation as it is forced to develep an abundance of new methods to deal with this growing count.
 
-The RSPCA is Australia’s oldest, largest and most trusted animal welfare organization, according to its description, there is a gradual increase in the number of animals every year which are received in animal shelters and adoption centers across the country. RSPCA decides to analyze the results of animals in Australia and help them.
+In addition to this, many articles and posts online have recently been indirectly blaming the RSPCA for their high euthanization rates in their centres as some see the worst side of the organisation @powell_2020. This thus motivated the following primary question for the subsequent analysis:
 
-While looking online and researching RSPCA we came across many articles that were indirectly blaming RSPCA for their high euthanize rates and some individuals who saw the worst side of RSPCA. That got us interested in the outcomes from RSPCA and as RSPCA operates state wise. After a while, it raised a question about which animal is euthanized most. One of the recent events that motivated us looking into the euthanization rates, you can read about it by clicking [here](https://mobile.abc.net.au/news/2020-02-26/rscpa-qld-issues-apology-after-accidentally-euthanasing-kitten/12001668).  @powell_2020
+> How does the RSPCA manage animal outcomes across Australia?
 
-We also came across multiple articles and web pages dedicated to the adoption of animals that have been in the care of RSPCA. We wanted to know which state rehomes the most animals. If you are interested please click this [link](https://www.rspca.org.au/adopt-pet). @Adopt_A_Pet
+Once this research area was established, 5 subsequent analysis questions were determined. They were:  
 
-Finally, cat person or dog person a comparison between the two types of people out there, which lost pet is most likely to get reclaimed.
+1. How effective are the RSPCA at producing 'good outcomes' for animals in Australia?  
+2. Is there a relationship between the type of animal and its outcome?  
+3. Do cats tend to be more often adopted or reclaimed than dogs from Australian RSPCA?  
+4. What are the most frequent complaints in Brisbane?  
+5. How the different type of complaints are distributed in dogs and cats?  
 
-
-
-
+During the research conducted, multiple articles and web pages dedicated to the adoption of animals that have been in the care of RSPCA were uncovered. If you are interested in adopting an animal, please click this [link](https://www.rspca.org.au/adopt-pet). @Adopt_A_Pet
 
 # Data description
 
