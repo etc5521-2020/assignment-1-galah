@@ -572,7 +572,66 @@ Figure \@ref(fig:complaint-animals), shows that dog complaints made by people ar
 
 
 
-## Q6: How the different type of complaints are distributed in dogs and cats?
+# New Question:
+
+<br>
+
+## Q2: How the different type of complaints are distributed in dogs and cats acorss time?
+
+Instead of focusing on which kind of animals gets the most of complaints, we are more interested in about what type of complaints have higher probability to happened between dogs and cats? And this new question is extended the the scope of the original analysis with animal complaints which only simply considered about the total number of complaints between dogs and cats. Thus, in this section,the distributions between dogs and cats with different type of complaints across several years are analyzed in more details.
+
+
+
+```{r complaints-number,warning=FALSE, message=FALSE,fig.cap="The total number of different complaint types in dogs and cats"}
+animal_complaints%>%
+  group_by(`Animal Type`,`Complaint Type`)%>%
+  summarise(Total=n())%>%
+  mutate(percentage=round((Total/sum(Total))*100,2),
+         percentage= paste0(percentage, "%"))%>%
+  arrange(Total)%>%
+  kable(
+       align = "llrr",
+       booktabs=TRUE,
+       caption = "The total number of different complaint types in dogs and cats")%>%
+  kable_styling(bootstrap_options = c("striped", "hover"))%>%
+  row_spec( 1:3,
+            bold = T, 
+            color = "white", 
+            background = "#518abb")
+```
+
+Based on the Table \@ref(tab:complaints-number), cats has three common complaints such as Enclosure,Private Impound and Wandering, but for dogs, beside of these three, they are also complained by aggressive animals, attack and noise. Compared with the wandering complaints, cats have 438 case whereas the dogs have 5501 case,almost 12 times as many as cats,suggesting that dogs get more complaints in wandering category. Similarly,by comparing the enclosure complaints, the case happened in dogs are almost 9 times in cats.
+
+However, it is not an appropriate method to explain the complaints issue between cats and dogs in numerical comparison as their population are different. For example, the private impound is the most of case as one of complaints in dogs. In fact, private impound complaints have more than 74% in cats but dogs only have around 25% in all complaints. In order to compare with different type of complaints across time between cats and dogs, we selected same type of complaints attribute in two animals to construct mosaic plot which can be visualized directly about the complaints distribution between cats and dogs.  
+
+
+
+```{r three-types-complaint}
+complaint_new<-complaint%>%
+  select(year,`Animal Type`,`Complaint Type`)%>%
+   group_by(year,`Animal Type`,`Complaint Type`)%>%
+  summarise(total=n())%>%
+  filter(`Complaint Type` %in% c("Enclosure","Private Impound","Wandering"))
+```
+
+
+
+```{r complaint-plot, fig.width=28, fig.height=4, out.width="100%",fig.cap="Animal Compplaints distribution across time"}
+library(vcd)
+
+complaint_new<-complaint_new %>%
+  mutate(Animal = factor(`Animal Type`, 
+            levels=c("cat", "dog"),
+            labels=c("C","D")),
+    Complaint = factor(`Complaint Type`, 
+            levels=c("Enclosure","Private Impound","Wandering")))
+
+doubledecker(xtabs(total~year+Animal+Complaint,data=complaint_new),
+             gp = gpar(fill=c("#9bc1e0", "#5acb94","#c96172")))
+```
+
+From the Figure \@ref(fig:complaint-plot), it shows that how the three common types of complaint distributed across several years between cats and dogs. There is an increasing trend with higher proportion in wander complaint for dogs,indicating that dogs get more complaints with wandering complaint than cats in the recent years. Dogs were more likely to be reported as having been abandoned in the recent ten years which would increase the probability in wandering complaint for dogs[@shih2019retrospective]. Moreover, based on the Table \@ref(tab:complaints-number), dogs complaints with aggressive animal and attack issue are around 22%,further explaining that it can increase security risks, such as attacks from other dogs, or attacks on humans while dogs wandering on the streets so makes more people complain wander issue. In addition,dogs have higher proportion than cats in enclosure complaint with increasing trend in recent years as some dogs lives in poor condition enclosure like offering insufficient food and water which have apparently became more prevalent[@beaver1994owner]. On the other hands, for the private impound, cats are most likely to get complaints more than dogs. One of the reasons is that cats are easy to be impounded privately, once they are found on the street without identifying their owners, and they are small-sized animals as well. Therefore, private impound complaints have most probability to happen in cats whereas enclosure and wander complaints are reported in dogs.
+
 
 
 
