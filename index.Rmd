@@ -144,9 +144,11 @@ brisbane_complaints <- tuesdata$brisbane_complaints
 
 ## Q1: How effective are the RSPCA at producing 'good outcomes' for animals in Australia?
 
--> Animals are taken into care by RSPCA animals that are neglected, animals that are reported, and animals that require care. sometimes RSPCA has to make a tough decision of euthanizing the animal, which is the most humane alternative, the reason could be medical, behavioural problems, etc. 
+The primary goal of the RSPCA, as stated on their [website](https://www.rspca.org.au/what-we-do), is the contribution to "animal welfare" in Australia. Many animals are taken into care by the RSPCA that are neglected, reported, lost or require professional care. However, sometimes the RSPCA are forced into make the tough decision to euthanize animals when it is the most humane alternative. This could be due to causes such as medical issues or behavioral problems. 
 
-There are other outcomes too, rehomed, in care, in stock, reclaimed, etc. Anything other than euthanization is a good outcome. Let us look at the animals saved by RSPCA or the rescue rate. 
+So how effective are the RSPCA at achieving their goal? This question will analyse the RSPCA's success at achieving 'good outcomes' for the animals that come into their care.
+
+For this analysis, the outcomes; rehomed, in care, in stock, reclaimed, released, transferred and currently in care were considered as 'good outcomes', essentially anything beside euthanization. Let us look at the animals saved by RSPCA or the rescue rate. 
 
 ```{r rdsmap}
 
@@ -211,10 +213,10 @@ leaflet(aus_map_states) %>%
             labFormat = labelFormat(suffix = "%"))
 ```
 
-Figure  \@ref(fig:leaflet), shows the rate of animals that are in the care of RSPCA, find a good outcome, from the year 1999 to 2018, where animals can be either reclaimed, rehomed, released, in stock, transferred, or be currently in care. The plot clearly shows Western Australia to have the highest good outcome rate of over 75%, while sadly New South Wales has the lowest good outcome rate of 55%. Otherwise meaning that the rest of the 45% of animals are euthanized.  
+Figure \@ref(fig:leaflet), shows the rate of animals that were in the care of the RSPCA that experienced a 'good outcome', from the year 1999 to 2018 in each state. The plot clearly shows that Western Australia outperformed all other Australian states, recording a rate of over 75% for positive outcomes. In comparison, New South Wales had the lowest 'good outcome' rate at just 53%, followed closely by Queensland at 53%. This suggests that almost half of all animals received by the RSPCA over this time in these states were euthanized, well behind the performance of the other states. Thus, these areas should be of focus for the RSPCA. As this graphic was made interactive, users can hover over any state to explore the exact rate in each region.  
 
-How has this changed over time?
-```{r}
+So while it definitely appears that certain states are outperforming others, it is important to consider how this rate has changed over time. Before comparing statistics on a state-by-state basis however, a national overview was produced below in Figure \@ref(fig:ridges). This graphic displays density plots of the distribution of positive outcomes for each year contained within the data set. Reading down the years, a clear improvement in performance can be seen. Beginning in 1999, not only is the average value lower, there is also a lot of variability in the rates recorded between states. However, over the years up until 2018, the average rate improves to approximately 75% nationally without the multi-modal distribution observed previously. This suggests that the RSPCA's success at achieving their primary goal has indeed gotten better over the years.
+```{r ridges, fig.cap="Change in positive outcomes over time, with Year on the y-axis and the percentage of positive outcomes on the x-axis"}
 library(ggridges)
 yearly_aus <- animal_outcomes %>% 
   group_by(outcome, year) %>% 
@@ -246,9 +248,9 @@ yearly_aus %>%
 ```
 
 
-We can also look at how this has changed for each state.
+Following this, the outcomes over time were further broken down into a state-by-state basis for comparison with Figure \@ref(fig:leaflet). Figure \@ref(fig:time) paints a more positive picture than the map examined earlier. Every state in the country has shown a general trend of improvement over the years captured by the data. New South Wales in particular, the lowest overall, has shown the greatest improvement in recent years. Mousing over the last recorded year, it can be seen that over 96% of animals experienced a 'good outcome' from the RSPCA in 2020. This is far above their overall average of 53%. The only state not too show obvious improvement was Western Australia. The highest averaging state instead maintained its rate over the time frame, with a noticeable drop in 2008 to 52%. This is quite unusual considering its overall performance and the fact that rates of 91% were recorded in both 2007 and 2009. Despite this, the trend across the country is positve for both the RSPCA and the future of Australian animals.
 
-```{r time}
+```{r time, fig.cap="Change in positve outcomes over time per state with percentage of positive outcomes on the x-axis and the year on the y-axis, faceted by state"}
 yearly_outcomes <- yearly_aus %>%
   mutate(year = as.numeric(year) + 2000)
 
@@ -264,8 +266,8 @@ ggplotly(yearlyplot) %>%
   config(displayModeBar = F)
 ```
 
-And also by animal
-```{r animaltime, fig.width=10, fig.height=10}
+Speaking of Australian animals, a final measure to evaluate the RSPCA on is their performance by animal over time.
+```{r animaltime, fig.width=10, fig.height=10, fig.cap="Change in positve outcomes over time by animal with rate on the y-axis and year on the x-axis, faceted by animal type"}
 yearly_animal <- animal_outcomes %>%
   group_by(outcome, animal_type, year)%>% 
   summarise_at(vars(ACT, 
@@ -284,9 +286,11 @@ yearly_animal <- animal_outcomes %>%
   summarise(good_outcome = sum(outcomes[outcome != "Euthanized"])/sum(outcomes) * 100)
 
 animalplot <- yearly_animal %>%
-  ggplot(aes(x = year, y = good_outcome)) +
+  group_by(animal_type, year) %>%
+  summarise(avg = mean(good_outcome, na.rm = TRUE)) %>%
+  ggplot(aes(x = year, y = avg)) +
+  facet_wrap(~animal_type) +
   geom_line() +
-  facet_grid(State ~ animal_type) +
   theme_bw() +
   labs(x = "", y = "") +
   ggtitle("Change in positve outcomes over time by animal") +
@@ -297,82 +301,6 @@ ggplotly(animalplot) %>%
   config(displayModeBar = F)
 ```
 
-
--> In which state do animals have better odds of being rehomed. 
-
-```{r Rehomed}
-animal_outcomes2 <- animal_outcomes %>%
-  filter(outcome == "Rehomed")
-
-
-ACT_Rehomed_Ttl <- sum(animal_outcomes2$ACT)     #getting sum of total rehomed animal by state
-NSW_Rehomed_Ttl <- sum(animal_outcomes2$NSW)
-NT_Rehomed_Ttl <- sum(animal_outcomes2$NT, na.rm = TRUE)
-QLD_Rehomed_Ttl <- sum(animal_outcomes2$QLD)
-SA_Rehomed_Ttl <- sum(animal_outcomes2$SA)
-TAS_Rehomed_Ttl <- sum(animal_outcomes2$TAS)
-VIC_Rehomed_Ttl <- sum(animal_outcomes2$VIC)
-WA_Rehomed_Ttl <- sum(animal_outcomes2$WA)
-```
-
-```{r Total}
-ACT_Ttl <- sum(animal_outcomes$ACT)
-NSW_Ttl <- sum(animal_outcomes$NSW)
-NT_Ttl <- sum(animal_outcomes$NT, na.rm = TRUE)
-QLD_Ttl <- sum(animal_outcomes$QLD)
-SA_Ttl <- sum(animal_outcomes$SA, na.rm = TRUE)
-TAS_Ttl <- sum(animal_outcomes$TAS, na.rm = TRUE)
-VIC_Ttl <- sum(animal_outcomes$VIC)
-WA_Ttl <- sum(animal_outcomes$WA)
-```
-
-```{r New_dataset}
-d <- data.frame(
-  State = c("ACT",    #making a data frame
-            "NSW", 
-            "NT", 
-            "QLD", 
-            "SA", 
-            "TAS", 
-            "VIC", 
-            "WA"),
-  Rehomed_Ttl = c(ACT_Rehomed_Ttl, 
-                  NSW_Rehomed_Ttl, 
-                  NT_Rehomed_Ttl, 
-                  QLD_Rehomed_Ttl, 
-                  SA_Rehomed_Ttl, 
-                  TAS_Rehomed_Ttl, 
-                  VIC_Rehomed_Ttl, 
-                  WA_Rehomed_Ttl),
-  Total = c(ACT_Ttl, 
-            NSW_Ttl, 
-            NT_Ttl, 
-            QLD_Ttl, 
-            SA_Ttl, 
-            TAS_Ttl, 
-            VIC_Ttl, 
-            WA_Ttl)
-)  %>%
-  mutate(Percent = round(Rehomed_Ttl/Total*100)) #calculating percenatge of rehomed animals
-```
-
-
-```{r plot3, fig.width = 8, fig.height = 6, fig.cap="The percentage of rehomed animals state wise", fig.align= "center"}
-p3 <- ggplot(d, 
-             aes(x=reorder(State,Percent),  #plotting the data
-                 y=Percent)) +
-  geom_histogram(stat="identity", 
-                 fill = "lightblue", 
-                 position = "dodge",
-                 width= 0.8) +
-  xlab("State") +
-  ylab("Percentage") +
-  ggtitle("The percentage of rehomed animals state wise")
-
-ggplotly(p3)
-```
-
-In Figure  \@ref(fig:plot3), it is clear that the highest proportion of animals were relocated in WA and the lowest proportion in QLD, but the difference between them is so much as only 13 percent. This also corroborates with Figure  \@ref(fig:Animalsurvivalrate) in terms of good outcome. 
 
 ## Q2: Is there a relationship between the type of animal and its outcome?
 
