@@ -266,7 +266,8 @@ ggplotly(yearlyplot) %>%
   config(displayModeBar = F)
 ```
 
-Speaking of Australian animals, a final measure to evaluate the RSPCA on is their performance by animal over time.
+Speaking of Australian animals, a final measure to evaluate the RSPCA on is their performance by animal over time.This relationship is explored in Figure \@ref(fig:animaltime). Positively, there is some improvement seen in the outcome of Dogs, Cats and Other Animals in particular with all showing an increased rate of positive outcomes over time. Whereas Horses, Livestock and Wildlife have not shown any observable improvement. Of particular concern is the Wildlife category. While Horses and Livestock have maintained reasonably high rates (above 75%), positive outcomes for Wildlife have hovered around 50%. This thus suggests that almost all wildlife received by the RSPCA are being put down. This is not ideal and thus should be area of improvement for the organistaion to produce better outcomes for these animals.
+
 ```{r animaltime, fig.width=10, fig.height=10, fig.cap="Change in positve outcomes over time by animal with rate on the y-axis and year on the x-axis, faceted by animal type"}
 yearly_animal <- animal_outcomes %>%
   group_by(outcome, animal_type, year)%>% 
@@ -304,8 +305,9 @@ ggplotly(animalplot) %>%
 
 ## Q2: Is there a relationship between the type of animal and its outcome?
 
-We begin by looking at the overall data
-```{r animaloutcomes}
+Expanding on the observations made above in Figure \@ref(fig:animaltime), a second area of interest was considered relating to the relationship between the different types of animal and any one individual outcome. This was chosen as potentially troubling outcomes associated with any one animal could be uncovered and highlighted, leading to better intervention measures by the RSPCA. Figure \@ref(fig:animaloutcomes) below depicts the different proportionate outcomes for each animal across the different outcome types. A proportion was chosen for more direct comparison as the quantity received by the RSPCA was not consistent across the various animal types.  
+There are several observations that can be made from the plot. Firstly, the most euthanized animals were Wildlife and Cats by quite a significant margin. This suggests that there are fewer options available when it comes to these two animals. Cats in particular appear to only be euthanized or rehomed with very few owners ever reclaiming their animal. Whearas Dogs for example are much more evenly distributed between euthanized, reclaimed and rehomed indicating a higher change of the dog returning to its orginial owner. Wildlife meanwhile appears to have its own special category of released, which is reasonable considering most domesticated animals wouldn't fare well in the wild. Interestingly, Horses clearly have the highest rate for both currently in care and in stock. This may highlight a willingness to hold onto these animals for a longer period of time compared to others, with most being rehomed at some point.
+```{r animaloutcomes, fig.cap="Proportionate outcomes for different animals with proportionate outcome on the y-axis and the animal type on the x-axis, faceted by outcome"}
 ind_outcomes <- animal_outcomes %>%
   group_by(animal_type, outcome) %>%
   summarise(count = sum(Total))
@@ -328,8 +330,10 @@ prop_outcomes %>%
   ggtitle("Proportionate outcomes for different animals") +
   theme_bw()
 ```
-We can also look at how this has changed over time
-```{r animalovtime}
+
+As was done before, this measure can also be examined over time. Figure \@ref(fig:animalovtime) shows this relationship for each outcome and animal type. Examining this plot, several key observations can be made. Firstly, the proportion of wildlife released decreased quite signifcantly in the early 2000's in favour of animal transfers. This may indicate a shift in the strategy of the organisation. Secondly, the proportion of all animals being euthanized had decreased in recent years, particularly for Cats which is especially positive considering the results above. Wildlife however, did not follow this trend, dipping down to 30% in 2012 before returning to its normal level of around 60% the next year. Perhaps the strategies used during this year should be reconsidered by the RSPCA. Thirdly, the rate of Dogs being reclaimed has greatly increased, almost doubling from 22% in 1999 to 39% in 2018. Thus, the strategies used for Dogs may provide a template for the organisation to use in its care of other animals. Finally, the level of animals in stock and currently in care has been increasing for horses over time but not for any other animal. This anomaly should be further investigated (note that 'Currently In Care' appears to have replaced 'In Stock' as a classification in 2009).
+
+```{r animalovtime, fig.cap="Change in proportionate animal outcomes over time with proportionate outcome on the y-axis and year on the x-axis, faceted by outcome and coloured by animal type"}
 ind_outcomes_yr <- animal_outcomes %>%
   group_by(animal_type, outcome, year) %>%
   summarise(count = sum(Total))
@@ -339,7 +343,8 @@ ovr_outcomes_yr <- animal_outcomes %>%
   summarise(count = sum(Total))
 
 prop_outcomes_year <- left_join(ind_outcomes_yr, ovr_outcomes_yr, by = c ("animal_type" = "animal_type", "year" = "year")) %>%
-  mutate(prop = count.x/count.y)
+  mutate(prop = count.x/count.y) %>%
+  filter(animal_type != "Other Animals")
 
 animal_time_plot <- prop_outcomes_year %>%
   ggplot(aes(x = year, y = prop, colour = animal_type)) +
@@ -375,7 +380,6 @@ top_outcomes <- prop_outcomes_state %>%
   top_n(1)
 ```
 
-And what about by state?
 ```{r animalstate, cache=TRUE, eval=FALSE}
 library(gganimate)
 library(transformr)
@@ -413,13 +417,14 @@ anim <- newdf %>%
 
 anim_save("anim.gif", anim)
 ```
+Two further important factors to consider is if these animal outcomes are different for each state and how this has changed over time. To examine this, an animation was made and is displayed in Figure \@ref(fig:anim) below. Each state is highlighted based on the most common proportional outcome for each animal over each year in the data set. Aside from there being some apparent missing data, there are several important findings highlighted by this plot. Firstly, beginning with Cats, it is positive to see that euthanization became less and less common across the country over time in favour of rehoming. Similarly, by 2011, in no Australian state was euthanization the most common outcome for dogs. Horses meanwhile displayed much greater variability in the most common outcome by state indicating perhaps a lack of trend or plan for this animal type. Livestock and Other Animals meanwhile displayed similar trends to Cats with rehoming becoming the preferred method over euthanization. Finally, wildlife appears to have the most missing data with euthanized being the most commonly seen outcome over the time frame with a trend towards released and transferred in the Northern Territory and South Australia in particular in more recent years. As a final note, Western Australia rarely has euthanization as its most common outcome for any animal type which is supports the findings made in Figure \@ref(fig:leaflet).
 
-```{r, fig.cap="Change in proportionate animal outcomes over time by state"}
+```{r anim, fig.cap="Change in proportionate animal outcomes over time by state for each animal type"}
 knitr::include_graphics("anim.gif")
 ```
 
 
--> There are lot of animals that pass through RSPCA let us look at which animal is euthanized the most by RSPCA in Australia.
+Speaking of euthanization, Figure  \@ref(fig:AustraliaEuthanizationcount), shows us the euthanization count by animal type throughout Australia from the year 1999 to 2018. Cats have the highest recorded euthanization count at 553,956 in Australia under the care of RSPCA. So is it fair to say that Cats are more likely to euthanized than other animals? This question can be answered with modelling.
 
 ```{r getting counts, include=FALSE}
 animal_outcomes  %>% group_by( year,
@@ -477,8 +482,7 @@ options(scipen=999)
 
 ggplotly(p2)
 ```
-
-Figure  \@ref(fig:AustraliaEuthanizationcount), shows us the euthanization count by animal type throughout Australia from the year 1999 to 2018. Cats have the highest recorded euthanization count at 553,956 in Australia under the care of RSPCA. 
+Figure \@ref(fig:model) attempts to capture the linear relationship between outcome and animal type. The interactivity of the table allows the exploration of several different variables. Firstly, sorting by the r squared value, which measures the explanatory power of the model, it can be seen that the outcome animals being in care by the RSPCA is most directly tied to animal type, followed closely by reclaimed. The ouput can be restricted to just the 'InCare' model by typing this in the box in the top right. Sorting then by the estimate term, it can be seen that Horses are most positively associated with this outcome whereas Wildlife are the lowest. Noticeably the difference between Horses and second highest is much larger than Wildlife and the next lowest. Removing the filter and again sorting by estimate, it can be seen that Dogs actually have the highest positive association with any one outcome - that being reclaimed. Similarly, if the sort is reversed it can be seen that Horses are most negatively associated with euthanization rate followed closely by Dogs. Notably for the relationships above all p values were below the 0.05 significance level indicating that the animal type was significant on the outcome. As the table is interactive, all formed models can be explored. 
 
 ```{r model}
 library(DT)
