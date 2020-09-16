@@ -33,7 +33,7 @@ Finally, cat person or dog person a comparison between the two types of people o
 
  
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = F, message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(echo = FALSE, cache = FALSE,message=FALSE, warning=FALSE, fig.pos = 'H',fig.align ='center')
 ```
 
 ```{r libraries}
@@ -99,7 +99,7 @@ outcome_data %>%
                 position = "center")
 ```
 
-The `animal_complaints` data is from Australia government data [source sebsite](https://data.gov.au/data/dataset/animal-complaints), and the cleaned data is obtained from [Github tidytuesday](https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-21/animal_complaints.csv) which is from April 2014 to May 2020. It also contain `r nrow(animal_complaints)` observation with different type of animals and complaints. The variable information included in the data is displayed in the following table.
+The `animal_complaints` data is from [Australia government data](https://data.gov.au/data/dataset/animal-complaints), and the cleaned data is obtained from [Github tidytuesday](https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-21/animal_complaints.csv) which is from April 2014 to May 2020. It also contain `r nrow(animal_complaints)` observation with different type of animals and complaints. The variable information included in the data is displayed in the following table.
 
 ```{r complaints-data}
 complaints_data <- tibble(Variable = c("Animal Type", "Complaint Type", "Date Received", "Suburb", "Electoral Division"),
@@ -115,7 +115,7 @@ complaints_data %>%
                 position = "center")
 ```
 
-The `brisbane_complaints` data focus on the Brisbane city and it comes form Brisbane city council[source website](https://www.data.brisbane.qld.gov.au/data/dataset/96bec69c-6170-4ef0-93f1-eda279149b97), and the cleaned data is from [Github tidytuesday](https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-21/brisbane_complaints.csv). `r nrow(brisbane_complaints)` observation are recorded from February 2016 to December 2019 to in this dataset, and the animal type and complaint type are mainly used in this analysis. The following table is shown more details in this dataset:
+The `brisbane_complaints` data focus on the Brisbane city and it comes form [Brisbane city council](https://www.data.brisbane.qld.gov.au/data/dataset/96bec69c-6170-4ef0-93f1-eda279149b97), and the cleaned data is from [Github tidytuesday](https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-21/brisbane_complaints.csv). `r nrow(brisbane_complaints)` observation are recorded from February 2016 to December 2019 to in this dataset, and the animal type and complaint type are mainly used in this analysis. The following table is shown more details in this dataset:
 
 ```{r brisbane-data}
 complaints_data <- tibble(Variable = c("nature", "animal_type", "category", "suburb", "date_range","responsible_office","city"),
@@ -387,74 +387,122 @@ In Figure  \@ref(fig:plot3), it is clear that the highest proportion of animals 
 
 
 
+## Q5: The cats are more popuplar pets than dog
 
-## Q5: Cats versus dogs who are more likely to get reclaimed?
- 
+Were the dogs or cats more likely to get reclaimed or rehomed in Australia? Were dogs popular than cats? Companion animals are an important part of our social world. We
+often talk to them as if they were humans and some even refer to pets as
+their children. 
 
--> A very interesting question are there more cat people or dog people. 
+In this section, we will explore the outcome distribution between the two animals and emphasize in the reclaimed and rehomed outcome, relating to which kind of animals are getting popular in human life.
 
+<br>
 
-```{r screening}
-animal_outcomes3 <- animal_outcomes %>%
-  filter(outcome == "Reclaimed") %>%
-  filter(animal_type == c("Dogs", "Cats")) #filtering required animal types
-```
-
-```{r plot4, fig.width = 8, fig.height = 6, fig.cap="Reclaimed animals: Timeline", fig.align= "center"}
-p4 <-  ggplot(animal_outcomes3, 
-              aes( x = year,
-              y = Total, 
-              group = as.factor(animal_type),
-              shape = as.factor(animal_type),
-              colour = as.factor(animal_type))) +
-  geom_line() +
-  geom_point() +
-  ggtitle("Reclaimed animals: Timeline") +
-  theme(legend.title=element_blank())
-
-ggplotly(p4)
-```
-
-In Figure  \@ref(fig:plot4), from 1999 to 2018 the number of reclaimed cats has been stable, while the number of reclaimed dogs has fluctuated over the years. 2009 was a good year for dogs.
-
-### While we are at the subject of cats versus dogs, who gets the most complaints? 
-
-```{r complaints}
-x1 <- animal_complaints %>% 
-  select(`Animal Type`) %>%  #selecting animal type to get total count oer animal type 
-  count() 
+```{r screening,cache=TRUE,warning=FALSE, message=FALSE}
+animal_outcomes %>%
+  select(year,animal_type,outcome,QLD,Total)%>%
+  filter(animal_type == c("Dogs", "Cats"))%>%
+  group_by(animal_type,outcome)%>%
+ summarise(QLD=sum(QLD),Total=sum(Total))->outcome
 
 ```
 
-
-```{r ComplaintsagainstwhoCatsorDogs, fig.cap="Complaints against who: Cats or Dogs"}
-p4e <- x1 %>% ggplot(aes(x = Animal.Type, 
-                 y = freq)) + 
-  geom_bar(stat="identity", 
-           fill="yellow") + 
-  ylab("number of complaints") + xlab(" ") +  ggtitle("Complaints Launched")
-
-ggplotly(p4e)
+```{r rehomed-cat,eval=FALSE,fig.cap="Outcome distribution in Cats"}
+outcome%>%
+  filter(animal_type=="Cats")%>%
+  plot_ly(labels = ~outcome, 
+          values = ~Total, 
+          textinfo='label+percent',
+          textposition = 'inside',
+          insidetextfont = list(color = '#FFFFFF'),
+          marker = list(colors = colors,
+                      line = list(color = '#FFFFFF', width = 1)),
+          type = 'pie',
+          insidetextorientation='radial') %>%
+  layout(title = "outcome distribution in Cats",
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 ```
 
 
-Figure  \@ref(fig:ComplaintsagainstwhoCatsorDogs),  shows that dog complaints made by people are disproportionately higher than complaints against cats.
+```{r rehomed-dogs, eval=FALSE,fig.cap="Outcome distribution in dogs"}
 
-### What are the most frequent complaints in Brisbane?
+outcome%>%
+  filter(animal_type=="Dogs")%>%
+  plot_ly(labels = ~outcome, 
+          values = ~QLD, 
+          textinfo='label+percent',
+          textposition = 'inside',
+          insidetextfont = list(color = '#FFFFFF'),
+          marker = list(colors = colors,
+                      line = list(color = '#FFFFFF', width = 1)),
+          type = 'pie',
+          insidetextorientation='radial') %>%
+  layout(title = "Outcome distribution in Dogs",
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 
-```{r brisbanecomplaints}
+  
+```
+
+
+```{r rehomed-cat-dog,fig.height=5,fig.width=8,cache=TRUE,warning=FALSE, message=FALSE,fig.cap="Outcome distribution between dogs and cats"}
+
+
+outcome%>%
+  filter(animal_type=="Cats")->cat
+outcome%>%
+  filter(animal_type=="Dogs")->dog
+
+fig <- plot_ly()
+fig <- fig %>% add_pie(data = cat, labels = ~outcome, values = ~Total,name = "Cat",
+                       textinfo='label+percent',textposition = 'inside',
+                       insidetextfont = list(color = '#FFFFFF'),
+                       marker = list(colors = colors,
+                                      line = list(color = '#FFFFFF', width = 1)),
+                       type = 'pie',
+                       insidetextorientation='radial', domain = list(x = c(0, 0.5), y = c(0, 1)))
+fig <- fig %>% add_pie(data = dog, labels = ~outcome, values = ~Total,name = "Dog",
+                       textinfo='label+percent',textposition = 'inside',
+                       insidetextfont = list(color = '#FFFFFF'),
+                       marker = list(colors = colors,
+                                      line = list(color = '#FFFFFF', width = 1)),
+                       type = 'pie',
+                       insidetextorientation='radial', domain = list(x = c(0.5, 1), y = c(0, 1)))
+
+fig <- fig %>% layout(title = "Different outcomes in dogs and cats", showlegend =TRUE,
+                      #grid=list(rows=1, columns=1),
+                      xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+                      yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+fig
+```
+
+
+
+Figure \@ref(fig:rehomed-cat-dog) shows how the different outcomes have distributed over time in Australia for dogs and cats based RSPCA data. There are seven outcomes contained in these two animals and the euthanized outcome is more than 50% in cats, whereas is only around 31% in dogs. Of the dog that were euthanased, the majority of cases are because of severe behavioral issues such as aggression and severe anxiety [@bartlett2005rates]. However,the currently in care for cats is 3.05% more than dogs,revealing the life of cats are shorter and are easier to get disease than dogs in general so that the euthanized outcome is higher than dogs. In addition, the combined with reclaimed and rehomed outcome are 40.7% in cats, but there are more than half in dogs. In fact, the euthanized, reclaimed and rehomed outcome in dogs are distributed at 30% on average,indicating that dogs get reclaimed and rehomed outcome more than euthanized,indicating that people are more likely to reclaimed or rehomed dogs instead of cats. In addition, the inventory of cats is still 1.16%, while the inventory of dogs is only 0.766%, further indicating that dogs are more popular than cats for adopting program. More people reported liking dogs than reported liking cats, a finding
+consistent with stereotypes about the friendliness of dogs and the aloofness of cats. And having a dog is contributed to cardiovascular health benefits, both in terms of length of survival [@somervill2008physiological]. 
+
+In general, there is a general belief that dogs are more popular pets than cats based on RSPCA data.
+
+
+
+## Q6: What are the most frequent complaints in Brisbane?
+
+By analyzing more specific animal complaints problem, we focus on Brisbane city which in the capital of Queensland state. In this section, we will explore the distribution with different complaints and the most frequent complaints in Brisbane.
+
+```{r brisbanecomplaints,warning=FALSE, message=FALSE}
 brisbane_complaints_category <- brisbane_complaints  %>% select(category) #selecting category
 
 brisbane_complaints_category <- brisbane_complaints_category %>% 
   group_by(category) %>% 
-  tally()                   #getting tally of the compalints made in brisbane
+  tally()                   #getting tally of the complaints made in brisbane
 
 brisbane_complaints_category <- na.omit(brisbane_complaints_category)
 ```
 
-```{r treemap, fig.cap="Complaints made in Brisbane"}
+```{r treemap,warning=FALSE, message=FALSE,fig.height=5,fig.width=8, fig.cap="Different types of complaint in Brisbane"}
 
- p9 <- ggplot(brisbane_complaints_category, 
+ p1 <- ggplot(brisbane_complaints_category, 
               ggplot2::aes(area = n,
                            label = category, 
                            fill = category)) + 
@@ -473,10 +521,56 @@ brisbane_complaints_category <- na.omit(brisbane_complaints_category)
   fixed = NULL, 
   layout = "squarified", 
   start = "bottomleft") 
-p9 +  ggtitle("Complaints made in Brisbane")
+p1 +  ggtitle("Complaints made in Brisbane")
+
 ```
 
-Figure  \@ref(fig:treemap), shows us that in Brisbane the highest complaint rate is Fencing issues, followed by wandering animals, attack on animals, and attack on a person. 
+From Figure  \@ref(fig:treemap), shows us that the distribution of different complaints with animals in the Brisbane. The highest proportion of animal complaints is fencing issue, followed by wandering animals, attack on animals, and attack on a person. The reason about this four categories are happened in most is due to people didn't build up good condition in fences or enclosure for the animals which are easier for them to escape out of the fence and wander in the street. The animals attacks are often caused by animals wandering in the street or rushing out from poorly fenced properties[@hindle1992designing]. Moreover, once they run out from the fence or enclosure and wander in the street, it would increase the probability for them to attack people as some animals are aggressive and out-of-control in unknown situation.
+
+
+## Q7: who gets the most complaints between dogs and cats? 
+
+
+```{r complaint-date,cache=TRUE,warning=FALSE, message=FALSE}
+animal_complaints%>%
+  mutate(date=as.character(`Date Received`))%>%
+  separate(date, sep=" ", into = c("month", "year"))->complaint
+
+```
+
+```{r complaint-count,cache=TRUE,warning=FALSE, message=FALSE}
+complaint_count<-complaint %>% 
+  select(year,`Animal Type`,`Complaint Type`) %>%  
+  group_by(`Animal Type`)%>%
+  count_() 
+```
+
+```{r complaint-animals-1,eval=FALSE,fig.cap="The total number of complaints in dogs and cats"}
+p2 <- plot_ly(complaint_count, x = ~`Animal Type`, y = ~n, type = 'bar', name = "Animal",text = ~n, textposition = 'auto',
+             marker = list(color = 'rgb(158,202,225)',
+                           line = list(color = 'rgb(8,48,107)', width = 1.5)))%>%layout(title = "Total Complaints in dogs and cats",                                    yaxis = list(title = 'Count'),
+                   xaxis=list(title="Animal"))
+
+p2
+```
+
+```{r complaint-animals,fig.height=4,fig.cap="The total number of complaints in dogs and cats"}
+complaint_count%>% ggplot(aes(x =`Animal Type`, 
+                 y = n)) + 
+  geom_bar(stat="identity", 
+           fill="#39bcd7") + 
+  ylab("Count")+  
+  xlab("Animals")+
+  ggtitle("Total Complaints in dogs and cats")+
+  geom_text(aes(label = n,hjust = 0.5,vjust=-0.3))+
+  theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+        panel.background = element_rect(fill="transparent"))
+```
+
+Figure \@ref(fig:complaint-animals), shows that dog complaints made by people are disproportionately higher than complaints against cats across different years. Thus, the total number of complaints in dogs are more than cats.
+
+
 
 ## Q6: How the different type of complaints are distributed in dogs and cats?
 
