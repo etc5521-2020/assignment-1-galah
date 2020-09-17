@@ -286,7 +286,7 @@ ggplotly(yearlyplot) %>%
 
 Speaking of Australian animals, a final measure to evaluate the RSPCA on is their performance by animal over time.This relationship is explored in Figure \@ref(fig:animaltime). Positively, there is some improvement seen in the outcome of Dogs, Cats and Other Animals in particular with all showing an increased rate of positive outcomes over time. Whereas Horses, Livestock and Wildlife have not shown any observable improvement. Of particular concern is the Wildlife category. While Horses and Livestock have maintained reasonably high rates (above 75%), positive outcomes for Wildlife have hovered around 50%. This thus suggests that almost all wildlife received by the RSPCA are being put down. This is not ideal and thus should be area of improvement for the organistaion to produce better outcomes for these animals.
 
-```{r animaltime, fig.width=10, fig.height=10, fig.cap="Change in positve outcomes over time by animal with rate on the y-axis and year on the x-axis, faceted by animal type"}
+```{r animaltime, fig.cap="Change in positve outcomes over time by animal with rate on the y-axis and year on the x-axis, faceted by animal type"}
 yearly_animal <- animal_outcomes %>%
   group_by(outcome, animal_type, year)%>% 
   summarise_at(vars(ACT, 
@@ -379,6 +379,7 @@ animal_time_plot <- prop_outcomes_year %>%
 ggplotly(animal_time_plot) %>%
   config(displayModeBar = F)
 ```
+
 ```{r animdata}
 animal_state <-  animal_outcomes %>%
   pivot_longer(cols = ACT:WA, names_to = "State") %>%
@@ -495,7 +496,8 @@ options(scipen=999)
        title="Australia Euthanization count",                   #giving title
        caption = "Australia Euthanization rate") + 
   theme(axis.text.x = element_text(angle=45, vjust=0.9)) + 
-   ylim(c(0, 600000)) 
+   ylim(c(0, 600000)) +
+   theme_bw()
 
 ggplotly(p2)
 ```
@@ -801,7 +803,7 @@ From the Figure \@ref(fig:complaint-plot), it shows that how the three common ty
 
 # Conclusion
 
-In conclusion, RSPCA does what is best for the animals, there may be other factors involved such as state laws, size of the state, wildlife concentration, population in the state, that needs to be taken under consideration when looking at things such as good outcome rates, euthanization counts, rehomed animals, etc. 
+This report has analysed several different ways in which the RSPCA managed animal outcomes across Australia - the original question of interest for the report. The key findings can be summarised as such: Firstly, Western Australia is the strongest performing state in producing positive outcomes for animals and also this rate has increased over time for all states showing an improved performance for the organisation. Efforts however relating to wildlife in this area are lagging behind the other animal types. Secondly there does appear to be some correlation between animal type and its associated outcome. This was evidenced by the observed proportional outcomes for each animal type in the data set and was modeled. Thirdly, based on RSPCA data dogs were found to be the most popular animal, moreso than cats even. Fourthly, the most common complaints in Brisbane were related to fencing issues followed by wandering animals and attacks on both other animals and people. It was hypothesised that these three complaints were related due to animals escaping their enclosure and being in an unfamiliar environment. Additionally, the reports received for dogs was exponentially higher than that for cats. Finally, the complaints received for both cats and dogs were proportionally different, indicating that these issues may be related to the animal specifically. This finding, and those listed above, may help the RSPCA in designing more effective management strategies for the growing number of animals taken into their care. 
 
 
 The R packages we used in this report: 
