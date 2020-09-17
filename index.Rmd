@@ -33,8 +33,8 @@ Once this research area was established, 6 subsequent analysis questions were de
 2. Is there a relationship between the type of animal and its outcome?  
 3. Are cats more popular as pets than dogs? 
 4. What are the most frequent complaints in Brisbane? 
-5: Who gets the most complaints between dogs and cats? 
-6. How the different type of complaints are distributed in dogs and cats?  
+5. Who gets the most complaints between dogs and cats?  
+6. How are the different type of complaints are distributed in dogs and cats?  
 
 During the research conducted, multiple articles and web pages dedicated to the adoption of animals that have been in the care of RSPCA were uncovered. If you are interested in adopting an animal, please click this [link](https://www.rspca.org.au/adopt-pet). @Adopt_A_Pet
 
