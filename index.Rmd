@@ -3,15 +3,17 @@ title: "ETC5521 Assignment 2"
 subtitle: "Australian Animal Outcomes"
 team: galah
 author:
-  - Sen Wang
-  - Muhammad Soban Qasim
+  - (Sen Wang)
+  - (Muhammad Soban Qasim)
   - Lachlan Moody
   - Xitong He
 date: "`r Sys.Date()`"
 bibliography: references.bib
 biblio-style: authoryear-comp
 output: 
-  bookdown::html_document2
+  bookdown::html_document2:
+    toc: yes
+    toc_float: yes
 ---
 
 [This assignment is for ETC5521 Assignment 2 by Team `r rmarkdown::metadata$team` comprising of `r knitr::combine_words(rmarkdown::metadata$author)`.]{style="color:#006DAE;"}
@@ -498,7 +500,7 @@ options(scipen=999)
 ggplotly(p2)
 ```
 
-Figure \@ref(fig:model) attempts to capture the linear relationship between outcome and animal type. The interactivity of the table allows the exploration of several different variables. Firstly, sorting by the r squared value, which measures the explanatory power of the model, it can be seen that the outcome animals being in care by the RSPCA is most directly tied to animal type, followed closely by reclaimed. The ouput can be restricted to just the 'InCare' model by typing this in the box in the top right. Sorting then by the estimate term, it can be seen that Horses are most positively associated with this outcome whereas Wildlife are the lowest. Noticeably the difference between Horses and second highest is much larger than Wildlife and the next lowest. Removing the filter and again sorting by estimate, it can be seen that Dogs actually have the highest positive association with any one outcome - that being reclaimed. Similarly, if the sort is reversed it can be seen that Horses are most negatively associated with euthanization rate followed closely by Dogs. Notably for the relationships above all p values were below the 0.05 significance level indicating that the animal type was significant on the outcome. As the table is interactive, all formed models can be explored. 
+The table below attempts to capture the linear relationship between outcome and animal type. The interactivity of the table allows the exploration of several different variables. Firstly, sorting by the r squared value, which measures the explanatory power of the model, it can be seen that the outcome animals being in care by the RSPCA is most directly tied to animal type, followed closely by reclaimed. The ouput can be restricted to just the 'InCare' model by typing this in the box in the top right. Sorting then by the estimate term, it can be seen that Horses are most positively associated with this outcome whereas Wildlife are the lowest. Noticeably the difference between Horses and second highest is much larger than Wildlife and the next lowest. Removing the filter and again sorting by estimate, it can be seen that Dogs actually have the highest positive association with any one outcome - that being reclaimed. Similarly, if the sort is reversed it can be seen that Horses are most negatively associated with euthanization rate followed closely by Dogs. Notably for the relationships above all p values were below the 0.05 significance level indicating that the animal type was significant on the outcome. As the table is interactive, all formed models can be explored. 
 
 ```{r model}
 model_data <- prop_outcomes_state %>%
@@ -819,6 +821,5 @@ The R packages we used in this report:
 @broom,
 @kableExtra,
 @treemapify
-
 
 # References
